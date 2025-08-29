@@ -1,0 +1,87 @@
+﻿// AppleMagicFilter.c - KMDF Upper Filter for Apple Magic devices (kernel-mode)
+// Captures raw HID input reports in a ring buffer and exposes IOCTLs for last raw / parsed report.
+// DISCLAIMER: Educational scaffold; not production-ready.
+
+#include "AppleMagicFilter.h"
+
+static VOID Recompiled_EvtIoStop(WDFQUEUE Q, WDFREQUEST R, ULONG F){UNREFERENCED_PARAMETER(Q);UNREFERENCED_PARAMETER(F);WdfRequestComplete(R, STATUS_SUCCESS);} 
+
+NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING RegistryPath){
+    WDF_DRIVER_CONFIG cfg; WDF_OBJECT_ATTRIBUTES attr; NTSTATUS status;
+    WDF_DRIVER_CONFIG_INIT(&cfg, Recompiled_EvtDeviceAdd);
+    WDF_OBJECT_ATTRIBUTES_INIT(&attr);
+    status = WdfDriverCreate(DriverObject, RegistryPath, &attr, &cfg, WDF_NO_HANDLE);
+    return status;
+}
+
+NTSTATUS Recompiled_EvtDeviceAdd(WDFDRIVER Driver, PWDFDEVICE_INIT DeviceInit){
+    UNREFERENCED_PARAMETER(Driver);
+    WdfFdoInitSetFilter(DeviceInit);
+    WDF_PNPPOWER_EVENT_CALLBACKS pnp; WDF_PNPPOWER_EVENT_CALLBACKS_INIT(&pnp);
+    pnp.EvtDevicePrepareHardware = Recompiled_EvtPrepareHardware;
+    WdfDeviceInitSetPnpPowerEventCallbacks(DeviceInit, &pnp);
+
+    WDF_OBJECT_ATTRIBUTES devAttr; WDF_OBJECT_ATTRIBUTES_INIT_CONTEXT_TYPE(&devAttr, DEVICE_CONTEXT);
+    WDFDEVICE device; NTSTATUS status = WdfDeviceCreate(&DeviceInit, &devAttr, &device);
+    if(!NT_SUCCESS(status)) return status;
+
+    PDEVICE_CONTEXT ctx = GetDeviceContext(device);
+    RtlZeroMemory(&ctx->Ring, sizeof(ctx->Ring)); ctx->Ring.Head = -1;
+    WDF_OBJECT_ATTRIBUTES lockAttr; WDF_OBJECT_ATTRIBUTES_INIT(&lockAttr);
+    WdfSpinLockCreate(&lockAttr, &ctx->Ring.Lock);
+
+    WDF_IO_QUEUE_CONFIG qcfg; WDF_IO_QUEUE_CONFIG_INIT_DEFAULT_QUEUE(&qcfg, WdfIoQueueDispatchParallel);
+    qcfg.EvtIoDeviceControl = Recompiled_EvtIoDeviceControl;
+    qcfg.EvtIoInternalDeviceControl = Recompiled_EvtIoInternalDeviceControl;
+    qcfg.EvtIoStop = Recompiled_EvtIoStop;
+    status = WdfIoQueueCreate(device, &qcfg, WDF_NO_OBJECT_ATTRIBUTES, &ctx->Queue);
+    if(!NT_SUCCESS(status)) return status;
+
+    status = WdfDeviceCreateDeviceInterface(device, &GUID_DEVINTERFACE_RECOMPILED_RAW, NULL);
+    return status;
+}
+
+NTSTATUS Recompiled_EvtPrepareHardware(WDFDEVICE Device, WDFCMRESLIST Raw, WDFCMRESLIST Trans){
+    UNREFERENCED_PARAMETER(Device);UNREFERENCED_PARAMETER(Raw);UNREFERENCED_PARAMETER(Trans);return STATUS_SUCCESS;
+}
+
+VOID Recompiled_ReadReportCompletion(WDFREQUEST Request, WDFIOTARGET Target, PWDF_REQUEST_COMPLETION_PARAMS Params, WDFCONTEXT Context){
+    UNREFERENCED_PARAMETER(Target);UNREFERENCED_PARAMETER(Context);
+    WdfRequestComplete(Request, Params->IoStatus.Status);
+}
+
+static VOID RingPush(PDEVICE_CONTEXT ctx, PUCHAR data, USHORT len){
+    if(len>RECOMPILED_MAX_REPORT_SIZE) return; WdfSpinLockAcquire(ctx->Ring.Lock);
+    LONG next = (ctx->Ring.Head+1)%RECOMPILED_RING_CAPACITY; RtlCopyMemory(ctx->Ring.Data[next], data, len); ctx->Ring.Lengths[next]=len; ctx->Ring.Head=next; WdfSpinLockRelease(ctx->Ring.Lock);
+}
+
+VOID Recompiled_EvtIoInternalDeviceControl(WDFQUEUE Q, WDFREQUEST R, size_t OutLen, size_t InLen, ULONG Code){
+    UNREFERENCED_PARAMETER(OutLen);UNREFERENCED_PARAMETER(InLen);WDFDEVICE dev = WdfIoQueueGetDevice(Q);
+    if(Code==IOCTL_HID_READ_REPORT){
+        WDF_REQUEST_SEND_OPTIONS opt; WDF_REQUEST_SEND_OPTIONS_INIT(&opt, WDF_REQUEST_SEND_OPTION_SEND_AND_FORGET);
+        WdfRequestFormatRequestUsingCurrentType(R);
+        WdfRequestSetCompletionRoutine(R, Recompiled_ReadReportCompletion, dev);
+        if(!WdfRequestSend(R, WdfDeviceGetIoTarget(dev), &opt)){
+            NTSTATUS st = WdfRequestGetStatus(R); WdfRequestComplete(R, st);
+        }
+        return;
+    }
+    WDF_REQUEST_SEND_OPTIONS opt; WDF_REQUEST_SEND_OPTIONS_INIT(&opt, WDF_REQUEST_SEND_OPTION_SEND_AND_FORGET);
+    WdfRequestFormatRequestUsingCurrentType(R);
+    if(!WdfRequestSend(R, WdfDeviceGetIoTarget(dev), &opt)){
+        NTSTATUS st = WdfRequestGetStatus(R); WdfRequestComplete(R, st);
+    }
+}
+
+VOID Recompiled_EvtIoDeviceControl(WDFQUEUE Q, WDFREQUEST R, size_t OutLen, size_t InLen, ULONG Code){
+    UNREFERENCED_PARAMETER(InLen); WDFDEVICE dev = WdfIoQueueGetDevice(Q); PDEVICE_CONTEXT ctx = GetDeviceContext(dev);
+    if(Code==IOCTL_RECOMPILED_GET_LAST){
+        PUCHAR buf; size_t len; if(!NT_SUCCESS(WdfRequestRetrieveOutputBuffer(R, OutLen, (PVOID*)&buf, &len))){WdfRequestComplete(R, STATUS_INVALID_PARAMETER);return;}
+        USHORT copy=0; UCHAR tmp[RECOMPILED_MAX_REPORT_SIZE]; USHORT tlen=0; WdfSpinLockAcquire(ctx->Ring.Lock);
+        if(ctx->Ring.Head>=0){ LONG idx=ctx->Ring.Head; tlen=ctx->Ring.Lengths[idx]; if(tlen && tlen<=RECOMPILED_MAX_REPORT_SIZE){ RtlCopyMemory(tmp, ctx->Ring.Data[idx], tlen);} else tlen=0; }
+        WdfSpinLockRelease(ctx->Ring.Lock);
+        if(tlen && len>=tlen){ RtlCopyMemory(buf, tmp, tlen); copy=tlen; }
+        WdfRequestCompleteWithInformation(R, STATUS_SUCCESS, copy); return;
+    }
+    WdfRequestComplete(R, STATUS_INVALID_DEVICE_REQUEST);
+}

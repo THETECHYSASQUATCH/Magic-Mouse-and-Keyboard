@@ -1,0 +1,644 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Apple_KB_N_Mouse.sln||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Apple_KB_N_Mouse.sln||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Apple_KB_N_Mouse.vcxproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Apple_KB_N_Mouse.vcxproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Apple_KB_N_Mouse.vcxproj.filters||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Apple_KB_N_Mouse.vcxproj.filters||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\AppleMagicFilter.sln||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:AppleMagicFilter.sln||{8B382828-6202-11D1-8870-0000F87579D2}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\AppleMagicFilter.vcxproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:AppleMagicFilter.vcxproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\AppleMagicFilter.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:AppleMagicFilter.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\usersvc\\AppleMagicService.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:usersvc\\AppleMagicService.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\usersvc\\README.txt||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:usersvc\\README.txt||{8B382828-6202-11D1-8870-0000F87579D2}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\shared\\PLACEHOLDER||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:shared\\PLACEHOLDER||{8B382828-6202-11D1-8870-0000F87579D2}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\UserModeService_Plan.txt||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:UserModeService_Plan.txt||{8B382828-6202-11D1-8870-0000F87579D2}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\src\\driver\\AppleMagicFilter.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\driver\\AppleMagicFilter.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\src\\driver\\AppleMagicFilter.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\driver\\AppleMagicFilter.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\src\\driver\\AppleMagicFilter.inf||{3B902123-F8A7-4915-9F01-361F908088D0}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\driver\\AppleMagicFilter.inf||{3B902123-F8A7-4915-9F01-361F908088D0}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\UserModeService_TODO.txt||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:UserModeService_TODO.txt||{8B382828-6202-11D1-8870-0000F87579D2}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\src\\UserModeService_Plan.txt||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\UserModeService_Plan.txt||{8B382828-6202-11D1-8870-0000F87579D2}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\driver\\PLACEHOLDER||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:driver\\PLACEHOLDER||{8B382828-6202-11D1-8870-0000F87579D2}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\shared\\AppleMagicIoctl.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:shared\\AppleMagicIoctl.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\usersvc\\AppleMagicService.vcxproj||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:usersvc\\AppleMagicService.vcxproj||{8B382828-6202-11D1-8870-0000F87579D2}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\usersvc\\GestureEngine.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:usersvc\\GestureEngine.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\src\\driver\\PLACEHOLDER||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\driver\\PLACEHOLDER||{8B382828-6202-11D1-8870-0000F87579D2}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\src\\PLACEHOLDER||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\PLACEHOLDER||{8B382828-6202-11D1-8870-0000F87579D2}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\scripts\\Install-AppleMagic.ps1||{3B902123-F8A7-4915-9F01-361F908088D0}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:scripts\\Install-AppleMagic.ps1||{3B902123-F8A7-4915-9F01-361F908088D0}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\scripts\\PLACEHOLDER||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:scripts\\PLACEHOLDER||{8B382828-6202-11D1-8870-0000F87579D2}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Uninstall-AppleMagic.ps1||{3B902123-F8A7-4915-9F01-361F908088D0}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Uninstall-AppleMagic.ps1||{3B902123-F8A7-4915-9F01-361F908088D0}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\AppleMagicFilter\\scripts\\PLACEHOLDER||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:AppleMagicFilter\\scripts\\PLACEHOLDER||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\AppleInputFilter\\AppleInputFilter.vcxproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Drivers\\AppleInputFilter\\AppleInputFilter.vcxproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\ApplePTPVhf\\ApplePTPVhf.vcxproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Drivers\\ApplePTPVhf\\ApplePTPVhf.vcxproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\AppleInputFilter\\src\\AppleInputFilter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Drivers\\AppleInputFilter\\src\\AppleInputFilter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Common\\include\\IoctlContract.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Common\\include\\IoctlContract.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\AppleInputFilter\\inf\\AppleInputFilter.inf||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Drivers\\AppleInputFilter\\inf\\AppleInputFilter.inf||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\ApplePTPVhf\\inf\\ApplePTPVhf.inf||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Drivers\\ApplePTPVhf\\inf\\ApplePTPVhf.inf||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Common\\include\\ApplePTP_Ioctls.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Common\\include\\ApplePTP_Ioctls.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\ApplePTPVhf\\src\\ApplePTPVhf.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Drivers\\ApplePTPVhf\\src\\ApplePTPVhf.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Common\\src\\GuidDefs.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Common\\src\\GuidDefs.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\scripts\\Package-Drivers.ps1||{3B902123-F8A7-4915-9F01-361F908088D0}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:scripts\\Package-Drivers.ps1||{3B902123-F8A7-4915-9F01-361F908088D0}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Tools\\DriverInstaller\\DriverInstaller.csproj||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Tools\\DriverInstaller\\DriverInstaller.csproj||{8B382828-6202-11D1-8870-0000F87579D2}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Tools\\DriverInstaller\\app.manifest||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Tools\\DriverInstaller\\app.manifest||{8B382828-6202-11D1-8870-0000F87579D2}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Tools\\DriverInstaller\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Tools\\DriverInstaller\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 8,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Tools\\DriverInstaller\\Program.cs",
+              "RelativeDocumentMoniker": "Tools\\DriverInstaller\\Program.cs",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Tools\\DriverInstaller\\Program.cs",
+              "RelativeToolTip": "Tools\\DriverInstaller\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-29T15:53:52.219Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "app.manifest",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Tools\\DriverInstaller\\app.manifest",
+              "RelativeDocumentMoniker": "Tools\\DriverInstaller\\app.manifest",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Tools\\DriverInstaller\\app.manifest",
+              "RelativeToolTip": "Tools\\DriverInstaller\\app.manifest",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001203|",
+              "WhenOpened": "2025-08-29T15:53:43.099Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "DriverInstaller.csproj",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Tools\\DriverInstaller\\DriverInstaller.csproj",
+              "RelativeDocumentMoniker": "Tools\\DriverInstaller\\DriverInstaller.csproj",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Tools\\DriverInstaller\\DriverInstaller.csproj",
+              "RelativeToolTip": "Tools\\DriverInstaller\\DriverInstaller.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-08-29T15:53:40.547Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "Package-Drivers.ps1",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\scripts\\Package-Drivers.ps1",
+              "RelativeDocumentMoniker": "scripts\\Package-Drivers.ps1",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\scripts\\Package-Drivers.ps1",
+              "RelativeToolTip": "scripts\\Package-Drivers.ps1",
+              "ViewState": "AgIAAF0AAAAAAAAAAIBJwF8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-08-29T15:51:26.034Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "GuidDefs.c",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Common\\src\\GuidDefs.c",
+              "RelativeDocumentMoniker": "Common\\src\\GuidDefs.c",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Common\\src\\GuidDefs.c",
+              "RelativeToolTip": "Common\\src\\GuidDefs.c",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAABjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-08-26T16:43:51.289Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "ApplePTPVhf.c",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\ApplePTPVhf\\src\\ApplePTPVhf.c",
+              "RelativeDocumentMoniker": "Drivers\\ApplePTPVhf\\src\\ApplePTPVhf.c",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\ApplePTPVhf\\src\\ApplePTPVhf.c",
+              "RelativeToolTip": "Drivers\\ApplePTPVhf\\src\\ApplePTPVhf.c",
+              "ViewState": "AgIAAOkAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-08-26T16:27:23.525Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Apple_KB_N_Mouse.sln",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Apple_KB_N_Mouse.sln",
+              "RelativeDocumentMoniker": "Apple_KB_N_Mouse.sln",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Apple_KB_N_Mouse.sln",
+              "RelativeToolTip": "Apple_KB_N_Mouse.sln",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002855|",
+              "WhenOpened": "2025-08-26T16:18:35.904Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "ApplePTPVhf.inf",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\ApplePTPVhf\\inf\\ApplePTPVhf.inf",
+              "RelativeDocumentMoniker": "Drivers\\ApplePTPVhf\\inf\\ApplePTPVhf.inf",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\ApplePTPVhf\\inf\\ApplePTPVhf.inf",
+              "RelativeToolTip": "Drivers\\ApplePTPVhf\\inf\\ApplePTPVhf.inf",
+              "ViewState": "AgIAAD0AAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002933|",
+              "WhenOpened": "2025-08-26T15:48:23.903Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "AppleInputFilter.inf",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\AppleInputFilter\\inf\\AppleInputFilter.inf",
+              "RelativeDocumentMoniker": "Drivers\\AppleInputFilter\\inf\\AppleInputFilter.inf",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\AppleInputFilter\\inf\\AppleInputFilter.inf",
+              "RelativeToolTip": "Drivers\\AppleInputFilter\\inf\\AppleInputFilter.inf",
+              "ViewState": "AgIAAFkAAAAAAAAAAABBwAEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002933|",
+              "WhenOpened": "2025-08-26T15:48:10.345Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "IoctlContract.h",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Common\\include\\IoctlContract.h",
+              "RelativeDocumentMoniker": "Common\\include\\IoctlContract.h",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Common\\include\\IoctlContract.h",
+              "RelativeToolTip": "Common\\include\\IoctlContract.h",
+              "ViewState": "AgIAABQAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-08-26T15:21:53.312Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "AppleInputFilter.cpp",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\AppleInputFilter\\src\\AppleInputFilter.cpp",
+              "RelativeDocumentMoniker": "Drivers\\AppleInputFilter\\src\\AppleInputFilter.cpp",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\AppleInputFilter\\src\\AppleInputFilter.cpp",
+              "RelativeToolTip": "Drivers\\AppleInputFilter\\src\\AppleInputFilter.cpp",
+              "ViewState": "AgIAADkAAAAAAAAAAABBwDoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-08-26T15:21:34.009Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "ApplePTPVhf.vcxproj",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\ApplePTPVhf\\ApplePTPVhf.vcxproj",
+              "RelativeDocumentMoniker": "Drivers\\ApplePTPVhf\\ApplePTPVhf.vcxproj",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\ApplePTPVhf\\ApplePTPVhf.vcxproj",
+              "RelativeToolTip": "Drivers\\ApplePTPVhf\\ApplePTPVhf.vcxproj",
+              "ViewState": "AgIAAKQAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000698|",
+              "WhenOpened": "2025-08-26T15:19:09.409Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "AppleInputFilter.vcxproj",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\AppleInputFilter\\AppleInputFilter.vcxproj",
+              "RelativeDocumentMoniker": "Drivers\\AppleInputFilter\\AppleInputFilter.vcxproj",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\AppleInputFilter\\AppleInputFilter.vcxproj",
+              "RelativeToolTip": "Drivers\\AppleInputFilter\\AppleInputFilter.vcxproj",
+              "ViewState": "AgIAAKMAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000698|",
+              "WhenOpened": "2025-08-26T15:18:55.607Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Apple_KB_N_Mouse.vcxproj",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Apple_KB_N_Mouse.vcxproj",
+              "RelativeDocumentMoniker": "Apple_KB_N_Mouse.vcxproj",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Apple_KB_N_Mouse.vcxproj",
+              "RelativeToolTip": "Apple_KB_N_Mouse.vcxproj",
+              "ViewState": "AgIAAJgAAAAAAAAAAAAAwLwAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000698|",
+              "WhenOpened": "2025-08-25T20:46:33.776Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "ApplePTP_Ioctls.h",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Common\\include\\ApplePTP_Ioctls.h",
+              "RelativeDocumentMoniker": "Common\\include\\ApplePTP_Ioctls.h",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Common\\include\\ApplePTP_Ioctls.h",
+              "RelativeToolTip": "Common\\include\\ApplePTP_Ioctls.h",
+              "ViewState": "AgIAAB8AAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-08-26T15:55:19.549Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Apple_KB_N_Mouse.vcxproj.filters",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Apple_KB_N_Mouse.vcxproj.filters",
+              "RelativeDocumentMoniker": "Apple_KB_N_Mouse.vcxproj.filters",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Apple_KB_N_Mouse.vcxproj.filters",
+              "RelativeToolTip": "Apple_KB_N_Mouse.vcxproj.filters",
+              "ViewState": "AgIAAEMAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-08-25T20:46:30.153Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AppleMagicFilter.sln",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\AppleMagicFilter.sln",
+              "RelativeDocumentMoniker": "AppleMagicFilter.sln",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\AppleMagicFilter.sln",
+              "RelativeToolTip": "AppleMagicFilter.sln",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002855|",
+              "WhenOpened": "2025-08-17T17:11:24.8Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "PLACEHOLDER",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\AppleMagicFilter\\scripts\\PLACEHOLDER",
+              "RelativeDocumentMoniker": "AppleMagicFilter\\scripts\\PLACEHOLDER",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\AppleMagicFilter\\scripts\\PLACEHOLDER",
+              "RelativeToolTip": "AppleMagicFilter\\scripts\\PLACEHOLDER",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-08-25T15:56:26.825Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "AppleMagicIoctl.h",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\shared\\AppleMagicIoctl.h",
+              "RelativeDocumentMoniker": "shared\\AppleMagicIoctl.h",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\shared\\AppleMagicIoctl.h",
+              "RelativeToolTip": "shared\\AppleMagicIoctl.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-08-17T17:13:36.21Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AppleMagicFilter.h",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\AppleMagicFilter.h",
+              "RelativeDocumentMoniker": "AppleMagicFilter.h",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\AppleMagicFilter.h",
+              "RelativeToolTip": "AppleMagicFilter.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-08-17T16:58:23.993Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AppleMagicService.cpp",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\usersvc\\AppleMagicService.cpp",
+              "RelativeDocumentMoniker": "usersvc\\AppleMagicService.cpp",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\usersvc\\AppleMagicService.cpp",
+              "RelativeToolTip": "usersvc\\AppleMagicService.cpp",
+              "ViewState": "AgIAAGUAAAAAAAAAAAAAAMgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-08-17T17:16:07.924Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "Install-AppleMagic.ps1",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\scripts\\Install-AppleMagic.ps1",
+              "RelativeDocumentMoniker": "scripts\\Install-AppleMagic.ps1",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\scripts\\Install-AppleMagic.ps1",
+              "RelativeToolTip": "scripts\\Install-AppleMagic.ps1",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-08-17T18:30:15.078Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "PLACEHOLDER",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\driver\\PLACEHOLDER",
+              "RelativeDocumentMoniker": "driver\\PLACEHOLDER",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\driver\\PLACEHOLDER",
+              "RelativeToolTip": "driver\\PLACEHOLDER",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-08-17T17:11:43.713Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AppleMagicFilter.vcxproj",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\AppleMagicFilter.vcxproj",
+              "RelativeDocumentMoniker": "AppleMagicFilter.vcxproj",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\AppleMagicFilter.vcxproj",
+              "RelativeToolTip": "AppleMagicFilter.vcxproj",
+              "ViewState": "AgIAAFwAAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000698|",
+              "WhenOpened": "2025-08-22T17:49:43.993Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "PLACEHOLDER",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\shared\\PLACEHOLDER",
+              "RelativeDocumentMoniker": "shared\\PLACEHOLDER",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\shared\\PLACEHOLDER",
+              "RelativeToolTip": "shared\\PLACEHOLDER",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-08-17T17:13:38.857Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "README.txt",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\usersvc\\README.txt",
+              "RelativeDocumentMoniker": "usersvc\\README.txt",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\usersvc\\README.txt",
+              "RelativeToolTip": "usersvc\\README.txt",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2025-08-17T17:13:42.068Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "AppleMagicService.vcxproj",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\usersvc\\AppleMagicService.vcxproj",
+              "RelativeDocumentMoniker": "usersvc\\AppleMagicService.vcxproj",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\usersvc\\AppleMagicService.vcxproj",
+              "RelativeToolTip": "usersvc\\AppleMagicService.vcxproj",
+              "ViewState": "AgIAAFkAAAAAAAAAAABBwFoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000698|",
+              "WhenOpened": "2025-08-17T17:16:00.671Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "PLACEHOLDER",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\src\\PLACEHOLDER",
+              "RelativeDocumentMoniker": "src\\PLACEHOLDER",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\src\\PLACEHOLDER",
+              "RelativeToolTip": "src\\PLACEHOLDER",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-08-17T17:22:08.114Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "PLACEHOLDER",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\src\\driver\\PLACEHOLDER",
+              "RelativeDocumentMoniker": "src\\driver\\PLACEHOLDER",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\src\\driver\\PLACEHOLDER",
+              "RelativeToolTip": "src\\driver\\PLACEHOLDER",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-08-17T17:22:05.321Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "UserModeService_Plan.txt",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\UserModeService_Plan.txt",
+              "RelativeDocumentMoniker": "UserModeService_Plan.txt",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\UserModeService_Plan.txt",
+              "RelativeToolTip": "UserModeService_Plan.txt",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2025-08-17T17:00:23.736Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "PLACEHOLDER",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\scripts\\PLACEHOLDER",
+              "RelativeDocumentMoniker": "scripts\\PLACEHOLDER",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\scripts\\PLACEHOLDER",
+              "RelativeToolTip": "scripts\\PLACEHOLDER",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-08-17T18:30:30.073Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "Uninstall-AppleMagic.ps1",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Uninstall-AppleMagic.ps1",
+              "RelativeDocumentMoniker": "Uninstall-AppleMagic.ps1",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Uninstall-AppleMagic.ps1",
+              "RelativeToolTip": "Uninstall-AppleMagic.ps1",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-08-17T18:30:40.398Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "GestureEngine.h",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\usersvc\\GestureEngine.h",
+              "RelativeDocumentMoniker": "usersvc\\GestureEngine.h",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\usersvc\\GestureEngine.h",
+              "RelativeToolTip": "usersvc\\GestureEngine.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-08-17T17:19:12.572Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "AppleMagicFilter.c",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\src\\driver\\AppleMagicFilter.c",
+              "RelativeDocumentMoniker": "src\\driver\\AppleMagicFilter.c",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\src\\driver\\AppleMagicFilter.c",
+              "RelativeToolTip": "src\\driver\\AppleMagicFilter.c",
+              "ViewState": "AgIAAGUAAAAAAAAAAABBwGYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-08-17T16:58:02.47Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "AppleMagicFilter.inf",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\src\\driver\\AppleMagicFilter.inf",
+              "RelativeDocumentMoniker": "src\\driver\\AppleMagicFilter.inf",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\src\\driver\\AppleMagicFilter.inf",
+              "RelativeToolTip": "src\\driver\\AppleMagicFilter.inf",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002933|",
+              "WhenOpened": "2025-08-17T16:58:10.592Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "AppleMagicFilter.h",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\src\\driver\\AppleMagicFilter.h",
+              "RelativeDocumentMoniker": "src\\driver\\AppleMagicFilter.h",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\src\\driver\\AppleMagicFilter.h",
+              "RelativeToolTip": "src\\driver\\AppleMagicFilter.h",
+              "ViewState": "AgIAAEQAAAAAAAAAAABBwEUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-08-17T16:57:55.325Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "UserModeService_TODO.txt",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\UserModeService_TODO.txt",
+              "RelativeDocumentMoniker": "UserModeService_TODO.txt",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\UserModeService_TODO.txt",
+              "RelativeToolTip": "UserModeService_TODO.txt",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2025-08-17T16:58:34.29Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "UserModeService_Plan.txt",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\src\\UserModeService_Plan.txt",
+              "RelativeDocumentMoniker": "src\\UserModeService_Plan.txt",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\src\\UserModeService_Plan.txt",
+              "RelativeToolTip": "src\\UserModeService_Plan.txt",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2025-08-17T17:00:21.827Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

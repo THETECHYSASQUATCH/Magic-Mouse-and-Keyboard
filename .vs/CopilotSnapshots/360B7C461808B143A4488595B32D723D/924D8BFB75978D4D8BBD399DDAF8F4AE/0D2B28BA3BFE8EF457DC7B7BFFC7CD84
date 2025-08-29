@@ -1,0 +1,71 @@
+﻿Apple Magic Mouse & Keyboard Windows Support Driver (Enhanced Skeleton)
+=======================================================================
+
+STATUS: Still non-functional for end users. Added:
+- Ring buffer capture of raw HID input reports (filter driver skeleton)
+- Basic parsing stub for mouse report
+- New IOCTL (PARSE_LAST) to retrieve structured parsed data
+- Optional Virtual HID Framework (VHF) stubs (compile with ENABLE_VHF) for future Precision Touchpad style injection
+
+What Was Added (Optional Tasks)
+------------------------------
+1. Driver parsing scaffolding (Magic_ParseMouseReport)
+2. Additional IOCTL (IOCTL_APPLE_MAGIC_PARSE_LAST)
+3. Optional VHF miniport scaffolding (Magic_VhfInitialize / Magic_VhfPostMouseGesture)
+4. Data structures for parsed contacts (placeholder)
+
+Remaining Work Before Real Functionality
+---------------------------------------
+Driver Layer:
+- Correctly locate HID read report buffer (current illustrative access may differ; use WdfRequestRetrieveOutputMemory / map MDL as needed)
+- Implement full Magic Mouse report descriptor reverse engineered layout (model specific differences) and parse contacts & gestures
+- Implement Magic Keyboard Fn layer: capture vendor usages, modify output to present correct F1..F12 vs media decision
+- Battery level feature report / BLE characteristic bridging (user-mode)
+- Robust error handling and synchronization; IRQL correctness for ring ops (spin lock OK, ensure nonpaged memory)
+- Add proper HID Report Descriptor augmentation only if creating a virtual function (avoid altering physical descriptor unexpectedly)
+
+User-Mode Service (Not Yet Implemented)
+--------------------------------------
+Responsibilities:
+- Open device interface (GUID_DEVINTERFACE_APPLE_MAGIC_RAW)
+- Asynchronous overlapped loop: issue IOCTL_APPLE_MAGIC_PARSE_LAST (or raw) at a poll interval or convert to event-driven (read requests queued via custom queue)
+- Gesture recognition state machine (track multi-finger transitions, distances, timing)
+- Mapping gestures to Windows actions: either
+  a) Inject pointer/mouse wheel events (SendInput / InjectMouseInput)
+  b) Use VHF virtual precision touchpad for native Windows gestures (preferred)
+- Fn/media key policy configuration (persisted JSON)
+- Battery polling via Windows.Devices.Bluetooth for BLE devices
+- Logging & diagnostics channel
+
+Virtual HID (Precision Touchpad Emulation)
+-----------------------------------------
+Current stub uses an ultra-minimal placeholder descriptor. For real multi-touch/precision gestures, craft a HID descriptor matching Windows Precision Touchpad requirements (see Microsoft documentation) with collections for contacts, confidence, tip switch, contact count, etc. Feed parsed contacts through VhfReadReportSubmit at frame cadence.
+
+Security & Stability Considerations
+-----------------------------------
+- Validate report lengths strictly
+- Avoid trusting device-provided contact counts beyond allocated maximum
+- Graceful fallback: on parser failure, still provide raw movement via unmodified lower stack pass-through
+- Consider enabling WPP tracing for diagnostics (TRACE_LOGGING)
+- HLK / WHQL test matrix for HIDClass filter
+
+Build Notes
+-----------
+You must create a Visual Studio KMDF Driver project (Visual Studio + WDK) and add the files under src/driver. Define ENABLE_VHF in project settings only after adding VHF library/link settings.
+
+Compilation Flags Suggested
+---------------------------
+- Warning level /WX
+- Static analysis (/analyze) for driver
+- SAL annotations for public functions
+
+Future Enhancements
+-------------------
+- Configurable gesture mappings (JSON loaded by service)
+- UI app (WPF/WinUI) for preferences & updates
+- Auto firmware version detection & advisory
+- Power management optimizations (suspend/resume re-init logic)
+
+DISCLAIMER
+----------
+Educational scaffold. Not production ready. Reverse engineering may have legal or policy implications. Proceed at your own risk.

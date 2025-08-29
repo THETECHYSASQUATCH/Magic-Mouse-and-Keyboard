@@ -1,0 +1,13 @@
+﻿# Apple Magic User-Mode Service Scaffold
+
+This folder will contain the user-mode service / console harness.
+
+Initial Roadmap:
+1. Device discovery using SetupDi / CM APIs for GUID_DEVINTERFACE_APPLE_MAGIC_RAW.
+2. Periodic IOCTL_APPLE_MAGIC_PARSE_LAST requests to driver.
+3. Logging parsed deltas / buttons to console.
+4. Gesture recognizer (state machine) abstraction.
+5. Injection backend abstraction (SendInput vs VHF virtual dev).
+6. Convert to Windows Service (ServiceMain, HandlerEx) + config file.
+
+Not yet implemented.

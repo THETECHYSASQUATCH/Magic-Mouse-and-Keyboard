@@ -1,0 +1,83 @@
+;
+; Apple_KB_N_Mouse.inf - Upper HID filter for Apple Magic input devices
+;
+
+[Version]
+Signature   = "$WINDOWS NT$"
+Class       = HIDClass
+ClassGuid   = {745A17A0-74D3-11D0-B6FE-00A0C90F57DA}
+Provider    = %ManufacturerName%
+CatalogFile = Apple_KB_N_Mouse.cat
+DriverVer = 08/29/2025,10.51.56.42
+PnpLockdown = 1
+
+[DestinationDirs]
+DefaultDestDir = 12  ; drivers directory
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+Apple_KB_N_Mouse.sys  = 1,,
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%ManufacturerName% = Models,NTamd64
+
+[Models.NTamd64]
+; Magic Mouse 2 (Lightning)
+%Apple_Filter.DeviceDesc% = Install, HID\VID_05AC&PID_0269
+; Magic Mouse 1 (legacy)
+%Apple_Filter.DeviceDesc% = Install, HID\VID_05AC&PID_030D
+; Magic Trackpad 2
+%Apple_Filter.DeviceDesc% = Install, HID\VID_05AC&PID_0265
+; Magic Trackpad 1
+%Apple_Filter.DeviceDesc% = Install, HID\VID_05AC&PID_030E
+; Magic Keyboard compact ANSI
+%Apple_Filter.DeviceDesc% = Install, HID\VID_05AC&PID_0267
+; Magic Keyboard numeric pad
+%Apple_Filter.DeviceDesc% = Install, HID\VID_05AC&PID_026C
+; Magic Keyboard with Touch ID
+%Apple_Filter.DeviceDesc% = Install, HID\VID_05AC&PID_029A
+; Magic Keyboard 2 newer
+%Apple_Filter.DeviceDesc% = Install, HID\VID_05AC&PID_029C
+; Magic Keyboard with Touch ID + N-Pad
+%Apple_Filter.DeviceDesc% = Install, HID\VID_05AC&PID_029F
+
+[Install.NT]
+CopyFiles = DriverCopy
+AddReg    = UpperFilterReg
+
+[DriverCopy]
+Apple_KB_N_Mouse.sys
+
+[Install.NT.Services]
+AddService = Apple_KB_N_Mouse,%SPSVCINST_ASSOCSERVICE%,ServiceInstallSection
+
+[ServiceInstallSection]
+DisplayName    = %Apple_Filter.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START (load when matched)
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\Apple_KB_N_Mouse.sys
+LoadOrderGroup = Extended Base
+
+; Register our driver as an upper filter so the HID function stack stays intact.
+[UpperFilterReg]
+HKR, , UpperFilters, 0x00010000, Apple_KB_N_Mouse
+
+[Install.NT.Wdf]
+KmdfService = Apple_KB_N_Mouse, Apple_KB_N_Mouse_wdfsect
+
+[Apple_KB_N_Mouse_wdfsect]
+KmdfLibraryVersion = 1.15
+
+[Strings]
+SPSVCINST_ASSOCSERVICE = 0x00000002
+ManufacturerName = "YourCompany" 
+DiskName = "Apple Filter Installation Disk"
+Apple_Filter.DeviceDesc = "Apple Magic Input Filter"
+Apple_Filter.SVCDESC = "Apple Magic Input Filter Service"

@@ -1,0 +1,91 @@
+﻿; AppleInputFilter.inf - KMDF HID Upper Filter (Apple VID 05AC)
+[Version]
+Signature="$Windows NT$"
+Class=HIDClass
+ClassGuid={745A17A0-74D3-11D0-B6FE-00A0C90F57DA}
+Provider=%ManufacturerName%
+DriverVer=08/25/2025,1.0.0.3
+PnpLockDown=1
+CatalogFile=AppleInputFilter_$(ARCH).cat
+
+[SourceDisksNames]
+1=%DiskName%,,,
+
+[SourceDisksFiles]
+AppleInputFilter.sys=1
+
+[Manufacturer]
+%ManufacturerName%=Models,NTamd64,NTarm64
+
+[Models.NTamd64]
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_0265
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_0267
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_0268
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_0266
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_0272
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_0273
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_0274
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_0275
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_0269
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_026A
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_030D
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_030E
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_030F
+
+[Models.NTarm64]
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_0265
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_0267
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_0268
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_0266
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_0272
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_0273
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_0274
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_0275
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_0269
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_026A
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_030D
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_030E
+%Desc%=AppleInputFilter_Install, HID\VID_05AC&PID_030F
+
+[AppleInputFilter_Install.NT]
+CopyFiles=DriverCopyFiles
+
+[AppleInputFilter_Install.NT.HW]
+AddReg=UpperFilters_AddReg,DeviceSettings_AddReg
+
+[DestinationDirs]
+DriverCopyFiles=12
+
+[DriverCopyFiles]
+AppleInputFilter.sys
+
+[AppleInputFilter_Install.NT.Services]
+AddService=AppleInputFilter,,Service_Inst
+
+[AppleInputFilter_Install.NT.Wdf]
+KmdfService=AppleInputFilter,AppleInputFilter_Kmdf
+
+[AppleInputFilter_Kmdf]
+KmdfLibraryVersion=1.33
+
+[Service_Inst]
+DisplayName=%SvcName%
+ServiceType=1
+StartType=3
+ErrorControl=1
+ServiceBinary=%12%\AppleInputFilter.sys
+LoadOrderGroup=Base
+
+[UpperFilters_AddReg]
+HKR,,UpperFilters,0x00010000,"AppleInputFilter"
+
+[DeviceSettings_AddReg]
+HKR,,NaturalScroll,0x00010001,0
+HKR,,FnInversion,0x00010001,0
+HKR,,TrackingSpeed,0x00010001,5
+
+[Strings]
+ManufacturerName="YourCo"
+Desc="YourCo Apple Input HID Upper Filter"
+SvcName="Apple Input Filter Service"
+DiskName="Install Disk"

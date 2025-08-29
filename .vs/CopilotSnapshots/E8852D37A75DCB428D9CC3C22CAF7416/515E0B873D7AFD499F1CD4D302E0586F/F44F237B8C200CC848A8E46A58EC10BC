@@ -1,0 +1,94 @@
+﻿<#!
+.SYNOPSIS
+ Package built driver projects (AppleInputFilter, ApplePTPVhf, Apple_KB_N_Mouse) into a distributable .zip.
+.DESCRIPTION
+ Builds (optional), gathers *.sys / *.inf / *.cat (+ optional .pdb) for selected platforms/configs, and produces:
+  dist/Drivers_<Config>_<Timestamp>.zip
+ Folder layout inside zip:
+  <Project>/<Platform>/ (sys, inf, cat[, pdb])
+.PARAMETER Configuration
+ Build configuration (Debug or Release). Default: Release.
+.PARAMETER Platforms
+ Comma separated list of platforms (x64,ARM64). Default: x64.
+.PARAMETER Rebuild
+ If set, performs a rebuild before packaging.
+.PARAMETER IncludePdb
+ If set, include PDB files.
+.PARAMETER OutputDir
+ Override output directory (default: dist)
+.EXAMPLE
+  pwsh scripts/Package-Drivers.ps1 -Configuration Release -Platforms x64,ARM64 -Rebuild -IncludePdb
+#>
+param(
+    [string]$Configuration = 'Release',
+    [string]$Platforms = 'x64',
+    [switch]$Rebuild,
+    [switch]$IncludePdb,
+    [string]$OutputDir = 'dist'
+)
+
+$ErrorActionPreference = 'Stop'
+$root = Split-Path -Parent $MyInvocation.MyCommand.Path
+$solutionRoot = Resolve-Path "$root\.." | Select-Object -ExpandProperty Path
+Push-Location $solutionRoot
+
+$platformList = $Platforms.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+
+$projects = @(
+    @{ Name='AppleInputFilter'; Path='Drivers/AppleInputFilter/AppleInputFilter.vcxproj'; LocalOut=$true },
+    @{ Name='ApplePTPVhf'; Path='Drivers/ApplePTPVhf/ApplePTPVhf.vcxproj'; LocalOut=$true },
+    @{ Name='Apple_KB_N_Mouse'; Path='Apple_KB_N_Mouse.vcxproj'; LocalOut=$false }
+)
+
+function Invoke-Build([string]$proj,[string]$plat,[string]$cfg,[switch]$clean){
+    $t = $clean.IsPresent ? 'Rebuild' : 'Build'
+    & msbuild $proj "/t:$t" "/p:Configuration=$cfg" "/p:Platform=$plat" /nologo /v:m /m | Write-Host
+}
+
+if($Rebuild){
+    foreach($p in $projects){ foreach($plat in $platformList){ Invoke-Build $p.Path $plat $Configuration -clean }}
+}else{
+    foreach($p in $projects){ foreach($plat in $platformList){ Invoke-Build $p.Path $plat $Configuration }}
+}
+
+# Collect artifacts
+$staging = Join-Path $solutionRoot "_package_${Configuration}" 
+if(Test-Path $staging){ Remove-Item $staging -Recurse -Force }
+New-Item -ItemType Directory -Path $staging | Out-Null
+
+foreach($p in $projects){
+  foreach($plat in $platformList){
+    $projName = $p.Name
+    if($p.LocalOut){
+      # Output under project directory
+      $outDir = Join-Path $solutionRoot ("Drivers/$projName/$plat/$Configuration")
+    } else {
+      # Legacy sample outputs at solution root
+      $outDir = Join-Path $solutionRoot ("$plat/$Configuration")
+    }
+    if(-not (Test-Path $outDir)) { Write-Warning "Skip $projName ($plat) - path not found $outDir"; continue }
+
+    $destDir = Join-Path $staging "$projName/$plat"
+    New-Item -ItemType Directory -Path $destDir -Force | Out-Null
+
+    Get-ChildItem $outDir -File | Where-Object { $_.Extension -in '.sys','.inf','.cat' } | ForEach-Object { Copy-Item $_.FullName $destDir }
+    if($IncludePdb){ Get-ChildItem $outDir -File -Filter *.pdb | ForEach-Object { Copy-Item $_.FullName $destDir } }
+    # Also include packaged subfolder (contains cat if placed there)
+    $packSub = Join-Path $outDir $projName
+    if(Test-Path $packSub){
+       Get-ChildItem $packSub -File | Where-Object { $_.Extension -in '.sys','.inf','.cat' } | ForEach-Object { Copy-Item $_.FullName $destDir -Force }
+       if($IncludePdb){ Get-ChildItem $packSub -File -Filter *.pdb | ForEach-Object { Copy-Item $_.FullName $destDir -Force } }
+    }
+  }
+}
+
+# Create zip
+if(-not (Test-Path $OutputDir)) { New-Item -ItemType Directory -Path $OutputDir | Out-Null }
+$timestamp = Get-Date -Format 'yyyyMMdd_HHmmss'
+$zipName = "Drivers_${Configuration}_$timestamp.zip"
+$zipPath = Join-Path $OutputDir $zipName
+if(Test-Path $zipPath){ Remove-Item $zipPath -Force }
+Compress-Archive -Path (Join-Path $staging '*') -DestinationPath $zipPath -CompressionLevel Optimal
+Write-Host "Created package: $zipPath"
+
+Pop-Location

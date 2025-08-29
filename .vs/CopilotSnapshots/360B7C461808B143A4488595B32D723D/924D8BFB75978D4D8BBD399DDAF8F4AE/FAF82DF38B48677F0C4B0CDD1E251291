@@ -1,0 +1,77 @@
+﻿Apple Magic Mouse & Keyboard Windows Support Driver (Enhanced Skeleton)
+=======================================================================
+
+STATUS: Still non-functional for end users. Added:
+- Ring buffer capture of raw HID input reports (filter driver skeleton)
+- Basic parsing stub for mouse report
+- New IOCTL (PARSE_LAST) to retrieve structured parsed data
+- Optional Virtual HID Framework (VHF) stubs (compile with ENABLE_VHF) for future Precision Touchpad style injection
+- Solution & KMDF driver project scaffolding (AppleMagicFilter.sln / AppleMagicFilter.vcxproj)
+- Shared user-mode header (shared/AppleMagicIoctl.h)
+- User-mode service scaffold directory (usersvc/) README
+
+What Was Added (Optional Tasks)
+------------------------------
+1. Driver parsing scaffolding (Magic_ParseMouseReport)
+2. Additional IOCTL (IOCTL_APPLE_MAGIC_PARSE_LAST)
+3. Optional VHF miniport scaffolding (Magic_VhfInitialize / Magic_VhfPostMouseGesture)
+4. Data structures for parsed contacts (placeholder)
+5. Visual Studio solution & KMDF project file
+6. Shared header & user-mode service folder scaffold
+
+Remaining Work Before Real Functionality
+---------------------------------------
+Driver Layer:
+- Correctly locate HID read report buffer (current illustrative access may differ; use WdfRequestRetrieveOutputMemory / map MDL as needed)
+- Implement full Magic Mouse report descriptor reverse engineered layout (model specific differences) and parse contacts & gestures
+- Implement Magic Keyboard Fn layer: capture vendor usages, modify output to present correct F1..F12 vs media decision
+- Battery level feature report / BLE characteristic bridging (user-mode)
+- Robust error handling and synchronization; IRQL correctness for ring ops (spin lock OK, ensure nonpaged memory)
+- Add proper HID Report Descriptor augmentation only if creating a virtual function (avoid altering physical descriptor unexpectedly)
+
+User-Mode Service (Scaffold Only)
+---------------------------------
+Responsibilities:
+- Open device interface (GUID_DEVINTERFACE_APPLE_MAGIC_RAW)
+- Asynchronous overlapped loop: issue IOCTL_APPLE_MAGIC_PARSE_LAST (or raw) at a poll interval or event-driven design
+- Gesture recognition state machine (multi-finger transitions, distances, timing)
+- Mapping gestures to Windows actions (SendInput vs VHF precision injection)
+- Fn/media key policy configuration (persisted JSON)
+- Battery polling via Windows.Devices.Bluetooth (BLE characteristics)
+- Logging & diagnostics channel
+
+Virtual HID (Precision Touchpad Emulation)
+-----------------------------------------
+Current stub uses a minimal placeholder descriptor. For real precision touchpad support supply Microsoft-compliant descriptor (contacts, tip switch, confidence, contact count, logical/physical ranges). Feed parsed contacts via VhfReadReportSubmit.
+
+Security & Stability Considerations
+-----------------------------------
+- Validate report lengths strictly
+- Clamp contact counts to MAGIC_MAX_CONTACTS
+- Fail-safe pass-through on parser errors
+- Consider WPP tracing (add .tmh) for diagnostics
+- HLK / WHQL test matrix for HIDClass filter
+
+Build Notes
+-----------
+Open AppleMagicFilter.sln in VS with WDK installed. Adjust:
+- WindowsTargetPlatformVersion in AppleMagicFilter.vcxproj to your SDK
+- KMDF version (KMDF_VERSION_MINOR) to installed version
+Define ENABLE_VHF only after adding VHF libs (vhfkm.lib path) or remove the macro.
+
+Compilation Flags Suggested
+---------------------------
+- /WX /W4
+- /analyze (Driver) static analysis
+- SAL annotations for public APIs
+
+Future Enhancements
+-------------------
+- Configurable gesture mappings (JSON) + GUI
+- Firmware version detection
+- Power management optimizations (selective suspend)
+- Keyboard layout customization & per-app profiles
+
+DISCLAIMER
+----------
+Educational scaffold. Not production ready. Reverse engineering may have legal or policy implications. Proceed at your own risk.

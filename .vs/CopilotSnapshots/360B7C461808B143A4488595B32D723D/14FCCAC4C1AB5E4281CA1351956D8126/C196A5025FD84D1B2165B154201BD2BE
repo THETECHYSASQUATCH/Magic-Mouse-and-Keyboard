@@ -1,0 +1,21 @@
+﻿#pragma once
+#include <functional>
+#include "../shared/AppleMagicIoctl.h"
+
+// Basic gesture engine placeholder
+// Accumulates deltas and dispatches coarse scroll events when thresholds exceeded.
+class GestureEngine {
+public:
+    void OnParsedReport(const MAGIC_PARSED_MOUSE_REPORT_U& rep, std::function<void(int,int)> scrollCb) {
+        accumX += rep.DeltaX;
+        accumY += rep.DeltaY;
+        const int threshold = 120; // placeholder threshold
+        int emitX = 0, emitY = 0;
+        if (accumX >= threshold || accumX <= -threshold) { emitX = accumX; accumX = 0; }
+        if (accumY >= threshold || accumY <= -threshold) { emitY = accumY; accumY = 0; }
+        if ((emitX || emitY) && scrollCb) scrollCb(emitX, emitY);
+    }
+private:
+    int accumX = 0;
+    int accumY = 0;
+};

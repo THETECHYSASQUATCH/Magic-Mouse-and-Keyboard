@@ -1,0 +1,27 @@
+﻿// AppleMagicFilter.h - Skeleton header for Apple Magic Mouse/Keyboard upper filter
+// NOTE: This is a non-functional illustrative skeleton.
+#pragma once
+#include <ntddk.h>
+#include <wdf.h>
+#include <hidport.h>
+
+// {7B6E6F2F-4D2F-4A43-B5B2-9D7CB5A0B9E1}
+DEFINE_GUID(GUID_DEVINTERFACE_APPLE_MAGIC_RAW,
+0x7b6e6f2f, 0x4d2f, 0x4a43, 0xb5, 0xb2, 0x9d, 0x7c, 0xb5, 0xa0, 0xb9, 0xe1);
+
+// Device context
+typedef struct _DEVICE_CONTEXT {
+    WDFDEVICE WdfDevice;
+    WDFQUEUE  DefaultQueue;
+    LONG Sequence; // placeholder
+} DEVICE_CONTEXT, *PDEVICE_CONTEXT;
+
+WDF_DECLARE_CONTEXT_TYPE_WITH_NAME(DEVICE_CONTEXT, GetDeviceContext);
+
+DRIVER_INITIALIZE DriverEntry;
+EVT_WDF_DRIVER_DEVICE_ADD AppleMagic_EvtDeviceAdd;
+EVT_WDF_DEVICE_PREPARE_HARDWARE AppleMagic_EvtPrepareHardware;
+EVT_WDF_IO_QUEUE_IO_INTERNAL_DEVICE_CONTROL AppleMagic_EvtIoInternalDeviceControl;
+EVT_WDF_IO_QUEUE_IO_DEVICE_CONTROL AppleMagic_EvtIoDeviceControl;
+
+#define IOCTL_APPLE_MAGIC_GET_LAST_REPORT CTL_CODE(FILE_DEVICE_KEYBOARD, 0x801, METHOD_BUFFERED, FILE_ANY_ACCESS)

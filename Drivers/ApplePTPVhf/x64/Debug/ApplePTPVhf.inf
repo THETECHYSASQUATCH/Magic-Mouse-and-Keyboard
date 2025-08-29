@@ -1,0 +1,63 @@
+; ApplePTPVhf.inf - KMDF + VHF virtual Precision Touchpad (PTP)
+[Version]
+Signature="$Windows NT$"
+Class=HIDClass
+ClassGuid={745A17A0-74D3-11D0-B6FE-00A0C90F57DA}
+Provider=%ManufacturerName%
+DriverVer = 08/29/2025,10.51.52.685
+PnpLockDown=1
+CatalogFile=ApplePTPVhf.cat
+
+[SourceDisksNames]
+1=%DiskName%,,,
+
+[SourceDisksFiles]
+ApplePTPVhf.sys=1
+
+[Manufacturer]
+%ManufacturerName%=Standard,NTamd64,NTarm64
+
+[Standard.NTamd64]
+%Desc%=Install, ROOT\APPLEPTP_VHF
+
+[Standard.NTarm64]
+%Desc%=Install, ROOT\APPLEPTP_VHF
+
+[Install.NT]
+CopyFiles=DriverCopyFiles
+
+[Install.NT.Interfaces]
+AddInterface = {8C3F9B78-3C9E-46E8-A3A9-8AB2B45A0623}, "ApplePTP", ApplePTP_Ref
+
+[ApplePTP_Ref]
+AddReg = ApplePTP_Interface_AddReg
+
+[ApplePTP_Interface_AddReg]
+
+[DestinationDirs]
+DriverCopyFiles=12
+
+[DriverCopyFiles]
+ApplePTPVhf.sys
+
+[Install.NT.Services]
+AddService=ApplePTPVhf,0x00000002,ServiceInstall
+
+[Install.NT.Wdf]
+KmdfService = ApplePTPVhf, ApplePTPVhf_Kmdf
+
+[ApplePTPVhf_Kmdf]
+KmdfLibraryVersion = 1.15
+
+[ServiceInstall]
+DisplayName=%SvcDesc%
+ServiceType=1
+StartType=3
+ErrorControl=1
+ServiceBinary=%12%\ApplePTPVhf.sys
+
+[Strings]
+ManufacturerName="YourCo"
+Desc="YourCo Virtual Precision Touchpad (VHF)"
+SvcDesc="YourCo ApplePTP VHF Service"
+DiskName="Install Disk"

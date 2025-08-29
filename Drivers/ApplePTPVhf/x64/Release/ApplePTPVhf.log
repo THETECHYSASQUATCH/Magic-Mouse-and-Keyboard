@@ -1,0 +1,19 @@
+﻿  Building 'ApplePTPVhf' with toolset 'WindowsKernelModeDriver10.0' and the 'Desktop' target platform.
+  Stamping x64\Release\ApplePTPVhf.inf
+  Stamping [Version] section with DriverVer=08/29/2025,10.38.22.80
+  ApplePTPVhf.c
+  GuidDefs.c
+  Generating Code...
+  ApplePTPVhf.vcxproj -> C:\Users\thete\source\repos\THETECHYSASQUATCH\Magic-Mouse-and-Keyboard\x64\Release\ApplePTPVhf.sys
+  Done Adding Additional Store
+  Successfully signed: C:\Users\thete\source\repos\THETECHYSASQUATCH\Magic-Mouse-and-Keyboard\x64\Release\ApplePTPVhf.sys
+  
+  .......................
+  Signability test failed.
+  
+  Errors:
+  22.9.1: appleptpvhf.sys in [drivercopyfiles] of ApplePTPVhf\appleptpvhf.inf is missing or cannot be decompressed from source media.  Please verify all path values specified in SourceDisksNames, SouceDisksFiles, and CopyFiles sections resolve to the actual location of the file, and are expressed in terms relative to the location of the inf.
+  
+  Warnings:
+  None
+x64\Release\inf2catOutput.log : Inf2Cat error -2: "Inf2Cat, signability test failed." Double click to see the tool output.

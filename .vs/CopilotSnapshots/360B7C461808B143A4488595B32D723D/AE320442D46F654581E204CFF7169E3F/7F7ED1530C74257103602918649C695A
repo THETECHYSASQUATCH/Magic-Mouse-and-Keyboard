@@ -1,0 +1,72 @@
+﻿// AppleMagicFilter.c - Skeleton KMDF Upper Filter for Apple Magic devices
+// Non-functional placeholder illustrating structure only.
+
+#include "AppleMagicFilter.h"
+
+static VOID AppleMagic_EvtIoStop(_In_ WDFQUEUE Queue, _In_ WDFREQUEST Request, _In_ ULONG ActionFlags) {
+    UNREFERENCED_PARAMETER(Queue); UNREFERENCED_PARAMETER(ActionFlags); WdfRequestComplete(Request, STATUS_SUCCESS);
+}
+
+NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath) {
+    WDF_DRIVER_CONFIG config; NTSTATUS status; WDF_OBJECT_ATTRIBUTES attributes;
+    WDF_DRIVER_CONFIG_INIT(&config, AppleMagic_EvtDeviceAdd);
+    WDF_OBJECT_ATTRIBUTES_INIT(&attributes);
+    status = WdfDriverCreate(DriverObject, RegistryPath, &attributes, &config, WDF_NO_HANDLE);
+    return status;
+}
+
+NTSTATUS AppleMagic_EvtDeviceAdd(_In_ WDFDRIVER Driver, _Inout_ PWDFDEVICE_INIT DeviceInit) {
+    UNREFERENCED_PARAMETER(Driver);
+    WDF_PNPPOWER_EVENT_CALLBACKS pnpCallbacks; WDF_OBJECT_ATTRIBUTES devAttributes; WDFDEVICE device; NTSTATUS status;
+
+    WdfFdoInitSetFilter(DeviceInit); // Indicate filter role
+
+    WDF_PNPPOWER_EVENT_CALLBACKS_INIT(&pnpCallbacks);
+    pnpCallbacks.EvtDevicePrepareHardware = AppleMagic_EvtPrepareHardware;
+    WdfDeviceInitSetPnpPowerEventCallbacks(DeviceInit, &pnpCallbacks);
+
+    WDF_OBJECT_ATTRIBUTES_INIT_CONTEXT_TYPE(&devAttributes, DEVICE_CONTEXT);
+
+    status = WdfDeviceCreate(&DeviceInit, &devAttributes, &device);
+    if (!NT_SUCCESS(status)) return status;
+
+    PDEVICE_CONTEXT ctx = GetDeviceContext(device);
+    ctx->WdfDevice = device; ctx->Sequence = 0;
+
+    WDF_IO_QUEUE_CONFIG queueConfig; WDF_IO_QUEUE_CONFIG_INIT_DEFAULT_QUEUE(&queueConfig, WdfIoQueueDispatchParallel);
+    queueConfig.EvtIoDeviceControl = AppleMagic_EvtIoDeviceControl;
+    queueConfig.EvtIoInternalDeviceControl = AppleMagic_EvtIoInternalDeviceControl;
+    queueConfig.EvtIoStop = AppleMagic_EvtIoStop;
+
+    status = WdfIoQueueCreate(device, &queueConfig, WDF_NO_OBJECT_ATTRIBUTES, &ctx->DefaultQueue);
+    if (!NT_SUCCESS(status)) return status;
+
+    status = WdfDeviceCreateDeviceInterface(device, &GUID_DEVINTERFACE_APPLE_MAGIC_RAW, NULL);
+    return status;
+}
+
+NTSTATUS AppleMagic_EvtPrepareHardware(_In_ WDFDEVICE Device, _In_ WDFCMRESLIST ResourcesRaw, _In_ WDFCMRESLIST ResourcesTranslated) {
+    UNREFERENCED_PARAMETER(Device); UNREFERENCED_PARAMETER(ResourcesRaw); UNREFERENCED_PARAMETER(ResourcesTranslated);
+    return STATUS_SUCCESS;
+}
+
+VOID AppleMagic_EvtIoInternalDeviceControl(_In_ WDFQUEUE Queue, _In_ WDFREQUEST Request, _In_ size_t OutputBufferLength, _In_ size_t InputBufferLength, _In_ ULONG IoControlCode) {
+    UNREFERENCED_PARAMETER(Queue); UNREFERENCED_PARAMETER(OutputBufferLength); UNREFERENCED_PARAMETER(InputBufferLength); UNREFERENCED_PARAMETER(IoControlCode);
+    // Placeholder: real implementation would forward to lower driver w/ completion routine to capture reports
+    WdfRequestComplete(Request, STATUS_NOT_IMPLEMENTED);
+}
+
+VOID AppleMagic_EvtIoDeviceControl(_In_ WDFQUEUE Queue, _In_ WDFREQUEST Request, _In_ size_t OutputBufferLength, _In_ size_t InputBufferLength, _In_ ULONG IoControlCode) {
+    UNREFERENCED_PARAMETER(Queue); UNREFERENCED_PARAMETER(OutputBufferLength); UNREFERENCED_PARAMETER(InputBufferLength);
+    if (IoControlCode == IOCTL_APPLE_MAGIC_GET_LAST_REPORT) {
+        PUCHAR buffer; size_t len;
+        if (NT_SUCCESS(WdfRequestRetrieveOutputBuffer(Request, 16, &buffer, &len))) {
+            RtlZeroMemory(buffer, len);
+            WdfRequestCompleteWithInformation(Request, STATUS_SUCCESS, len);
+            return;
+        }
+        WdfRequestComplete(Request, STATUS_BUFFER_TOO_SMALL);
+        return;
+    }
+    WdfRequestComplete(Request, STATUS_INVALID_DEVICE_REQUEST);
+}

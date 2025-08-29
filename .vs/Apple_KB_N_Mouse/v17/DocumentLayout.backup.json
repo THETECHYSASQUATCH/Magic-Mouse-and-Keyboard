@@ -1,0 +1,61 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{0894A368-0E65-4914-A9A1-6C56EEB4E2E5}|Drivers\\ApplePTPVhf\\ApplePTPVhf.vcxproj|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\ApplePTPVhf\\src\\ApplePTPVhf.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{0894A368-0E65-4914-A9A1-6C56EEB4E2E5}|Drivers\\ApplePTPVhf\\ApplePTPVhf.vcxproj|solutionrelative:Drivers\\ApplePTPVhf\\src\\ApplePTPVhf.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EE785033-CC09-47C5-8ED6-77C6C73111E4}|Drivers\\AppleInputFilter\\AppleInputFilter.vcxproj|C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\AppleInputFilter\\src\\AppleInputFilter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{EE785033-CC09-47C5-8ED6-77C6C73111E4}|Drivers\\AppleInputFilter\\AppleInputFilter.vcxproj|solutionrelative:Drivers\\AppleInputFilter\\src\\AppleInputFilter.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ApplePTPVhf.c",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\ApplePTPVhf\\src\\ApplePTPVhf.c",
+              "RelativeDocumentMoniker": "Drivers\\ApplePTPVhf\\src\\ApplePTPVhf.c",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\ApplePTPVhf\\src\\ApplePTPVhf.c",
+              "RelativeToolTip": "Drivers\\ApplePTPVhf\\src\\ApplePTPVhf.c",
+              "ViewState": "AgIAAMEAAAAAAAAAAAAiwNwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-08-26T15:52:41.216Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AppleInputFilter.cpp",
+              "DocumentMoniker": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\AppleInputFilter\\src\\AppleInputFilter.cpp",
+              "RelativeDocumentMoniker": "Drivers\\AppleInputFilter\\src\\AppleInputFilter.cpp",
+              "ToolTip": "C:\\Users\\thete\\source\\repos\\THETECHYSASQUATCH\\Magic-Mouse-and-Keyboard\\Drivers\\AppleInputFilter\\src\\AppleInputFilter.cpp",
+              "RelativeToolTip": "Drivers\\AppleInputFilter\\src\\AppleInputFilter.cpp",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAsAAABkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-08-25T20:53:45.986Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

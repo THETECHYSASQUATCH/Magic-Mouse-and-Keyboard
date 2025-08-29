@@ -1,0 +1,35 @@
+﻿  Building 'Apple_KB_N_Mouse' with toolset 'WindowsKernelModeDriver10.0' and the 'Universal' target platform.
+  Stamping x64\Debug\Apple_KB_N_Mouse.inf
+  Stamping [Version] section with DriverVer=08/25/2025,15.37.1.125
+  Device.c
+  Driver.c
+  Gesture.c
+  Parser.c
+  Queue.c
+  Generating Code...
+  Compiling...
+  AppleMagicService.cpp
+  Generating Code...
+  Apple_KB_N_Mouse.vcxproj -> C:\Users\thete\source\repos\THETECHYSASQUATCH\Magic-Mouse-and-Keyboard\x64\Debug\Apple_KB_N_Mouse.sys
+  Done Adding Additional Store
+  Successfully signed: C:\Users\thete\source\repos\THETECHYSASQUATCH\Magic-Mouse-and-Keyboard\x64\Debug\Apple_KB_N_Mouse.sys
+  
+  Driver is 'Universal'.
+  .........................
+  Signability test complete.
+  
+  Errors:
+  None
+  
+  Warnings:
+  None
+  
+  Catalog generation complete.
+  C:\Users\thete\source\repos\THETECHYSASQUATCH\Magic-Mouse-and-Keyboard\x64\Debug\Apple_KB_N_Mouse\apple_kb_n_mouse.cat
+  Set catalog attribute.
+  WdkVersion: 10.0.26100.0
+  Set catalog attribute.
+  WdkAssemblyVersion: 10.0.26100.4202
+  Done Adding Additional Store
+  Successfully signed: C:\Users\thete\source\repos\THETECHYSASQUATCH\Magic-Mouse-and-Keyboard\x64\Debug\Apple_KB_N_Mouse\apple_kb_n_mouse.cat
+  

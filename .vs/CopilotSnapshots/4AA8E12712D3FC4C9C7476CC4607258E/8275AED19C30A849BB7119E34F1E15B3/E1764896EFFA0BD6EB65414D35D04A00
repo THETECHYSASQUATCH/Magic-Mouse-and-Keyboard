@@ -1,0 +1,74 @@
+﻿// AppleMagicFilter.h - Apple Magic Mouse/Keyboard upper filter (kernel-mode)
+// Kernel-mode only version (NO_WDK stub removed)
+#pragma once
+
+#include <ntddk.h>
+#include <wdf.h>
+#include <hidport.h>
+
+// {7B6E6F2F-4D2F-4A43-B5B2-9D7CB5A0B9E1}
+DEFINE_GUID(GUID_DEVINTERFACE_APPLE_MAGIC_RAW,
+0x7b6e6f2f, 0x4d2f, 0x4a43, 0xb5, 0xb2, 0x9d, 0x7c, 0xb5, 0xa0, 0xb9, 0xe1);
+
+#define MAGIC_MAX_REPORT_SIZE   64      // Adjust when real max size known
+#define MAGIC_RING_CAPACITY     128
+#define MAGIC_MAX_CONTACTS      5
+
+// Parsed Magic Mouse contact (simplified)
+typedef struct _MAGIC_CONTACT {
+    UCHAR  ContactId;
+    USHORT X; // raw coordinate
+    USHORT Y;
+    UCHAR  TouchMajor;
+    UCHAR  TouchMinor;
+    BOOLEAN Valid;
+} MAGIC_CONTACT, *PMAGIC_CONTACT;
+
+typedef struct _MAGIC_PARSED_MOUSE_REPORT {
+    UCHAR ReportId;
+    UCHAR Buttons;
+    SHORT DeltaX;
+    SHORT DeltaY;
+    UCHAR ContactCount;
+    MAGIC_CONTACT Contacts[MAGIC_MAX_CONTACTS];
+} MAGIC_PARSED_MOUSE_REPORT, *PMAGIC_PARSED_MOUSE_REPORT;
+
+// Ring buffer for raw reports (single-producer in completion, multi-consumer via IOCTL)
+typedef struct _MAGIC_REPORT_RING {
+    UCHAR  Data[MAGIC_RING_CAPACITY][MAGIC_MAX_REPORT_SIZE];
+    USHORT Lengths[MAGIC_RING_CAPACITY];
+    volatile LONG Head; // index of most recent (starts at -1)
+    WDFSPINLOCK Lock;
+} MAGIC_REPORT_RING, *PMAGIC_REPORT_RING;
+
+#ifdef ENABLE_VHF
+#include <vhf.h>
+typedef struct _MAGIC_VHF_CONTEXT {
+    VHFHANDLE VhfHandle;
+    BOOLEAN   Enabled;
+} MAGIC_VHF_CONTEXT, *PMAGIC_VHF_CONTEXT;
+#endif
+
+// Device context
+typedef struct _DEVICE_CONTEXT {
+    WDFDEVICE         WdfDevice;
+    WDFQUEUE          IoctlQueue; // default queue for DeviceControl / InternalDeviceControl
+    MAGIC_REPORT_RING Ring;       // raw report ring buffer
+#ifdef ENABLE_VHF
+    MAGIC_VHF_CONTEXT Vhf;
+#endif
+} DEVICE_CONTEXT, *PDEVICE_CONTEXT;
+
+WDF_DECLARE_CONTEXT_TYPE_WITH_NAME(DEVICE_CONTEXT, GetDeviceContext);
+
+DRIVER_INITIALIZE DriverEntry;
+EVT_WDF_DRIVER_DEVICE_ADD AppleMagic_EvtDeviceAdd;
+EVT_WDF_DEVICE_PREPARE_HARDWARE AppleMagic_EvtPrepareHardware;
+EVT_WDF_IO_QUEUE_IO_INTERNAL_DEVICE_CONTROL AppleMagic_EvtIoInternalDeviceControl;
+EVT_WDF_IO_QUEUE_IO_DEVICE_CONTROL AppleMagic_EvtIoDeviceControl;
+EVT_WDF_REQUEST_COMPLETION_ROUTINE AppleMagic_ReadReportCompletion;
+
+#define IOCTL_APPLE_MAGIC_GET_LAST_REPORT CTL_CODE(FILE_DEVICE_KEYBOARD, 0x801, METHOD_BUFFERED, FILE_ANY_ACCESS)
+#define IOCTL_APPLE_MAGIC_PARSE_LAST      CTL_CODE(FILE_DEVICE_KEYBOARD, 0x802, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+BOOLEAN Magic_ParseMouseReport(_In_reads_bytes_(Length) const UCHAR* Report, _In_ USHORT Length, _Out_ PMAGIC_PARSED_MOUSE_REPORT Parsed);

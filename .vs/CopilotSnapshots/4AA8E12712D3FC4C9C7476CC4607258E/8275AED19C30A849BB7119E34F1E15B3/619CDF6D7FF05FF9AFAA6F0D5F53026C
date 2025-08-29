@@ -1,0 +1,215 @@
+﻿// AppleMagicFilter.c - KMDF Upper Filter for Apple Magic devices (kernel-mode)
+// Captures raw HID input reports in a ring buffer and exposes IOCTLs for last raw / parsed report.
+// DISCLAIMER: Educational scaffold; not production-ready.
+
+#include "AppleMagicFilter.h"
+
+// Forward declarations
+static NTSTATUS AppleMagic_CreateQueues(_In_ WDFDEVICE Device);
+static VOID AppleMagic_RingInit(_Inout_ PMAGIC_REPORT_RING Ring, _In_ WDFDEVICE Device);
+static VOID AppleMagic_RingPush(_Inout_ PMAGIC_REPORT_RING Ring, _In_reads_bytes_(Length) PUCHAR Data, _In_ USHORT Length);
+#ifdef ENABLE_VHF
+static NTSTATUS AppleMagic_VhfStart(_In_ PDEVICE_CONTEXT ctx);
+NTSTATUS Magic_VhfPostMouseGesture(_In_ PDEVICE_CONTEXT Ctx, _In_ const MAGIC_PARSED_MOUSE_REPORT* Parsed); // forward decl
+#endif
+
+static VOID AppleMagic_EvtIoStop(_In_ WDFQUEUE Queue, _In_ WDFREQUEST Request, _In_ ULONG ActionFlags) {
+    UNREFERENCED_PARAMETER(Queue); UNREFERENCED_PARAMETER(ActionFlags); WdfRequestComplete(Request, STATUS_SUCCESS);
+}
+
+NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath) {
+    WDF_DRIVER_CONFIG config; NTSTATUS status; WDF_OBJECT_ATTRIBUTES attributes;
+    WDF_DRIVER_CONFIG_INIT(&config, AppleMagic_EvtDeviceAdd);
+    WDF_OBJECT_ATTRIBUTES_INIT(&attributes);
+    status = WdfDriverCreate(DriverObject, RegistryPath, &attributes, &config, WDF_NO_HANDLE);
+    return status;
+}
+
+NTSTATUS AppleMagic_EvtDeviceAdd(_In_ WDFDRIVER Driver, _Inout_ PWDFDEVICE_INIT DeviceInit) {
+    UNREFERENCED_PARAMETER(Driver);
+    WDF_PNPPOWER_EVENT_CALLBACKS pnpCallbacks; WDF_OBJECT_ATTRIBUTES devAttributes; WDFDEVICE device; NTSTATUS status;
+
+    WdfFdoInitSetFilter(DeviceInit); // Upper filter for existing HID stack
+
+    WDF_PNPPOWER_EVENT_CALLBACKS_INIT(&pnpCallbacks);
+    pnpCallbacks.EvtDevicePrepareHardware = AppleMagic_EvtPrepareHardware;
+    WdfDeviceInitSetPnpPowerEventCallbacks(DeviceInit, &pnpCallbacks);
+
+    WDF_OBJECT_ATTRIBUTES_INIT_CONTEXT_TYPE(&devAttributes, DEVICE_CONTEXT);
+
+    status = WdfDeviceCreate(&DeviceInit, &devAttributes, &device);
+    if (!NT_SUCCESS(status)) return status;
+
+    PDEVICE_CONTEXT ctx = GetDeviceContext(device);
+    AppleMagic_RingInit(&ctx->Ring, device);
+#ifdef ENABLE_VHF
+    ctx->Vhf.Enabled = FALSE; ctx->Vhf.VhfHandle = NULL;
+#endif
+
+    status = AppleMagic_CreateQueues(device);
+    if (!NT_SUCCESS(status)) return status;
+
+    status = WdfDeviceCreateDeviceInterface(device, &GUID_DEVINTERFACE_APPLE_MAGIC_RAW, NULL);
+#ifdef ENABLE_VHF
+    if (NT_SUCCESS(status)) {
+        AppleMagic_VhfStart(ctx); // ignore failure for now
+    }
+#endif
+    return status;
+}
+
+NTSTATUS AppleMagic_EvtPrepareHardware(_In_ WDFDEVICE Device, _In_ WDFCMRESLIST ResourcesRaw, _In_ WDFCMRESLIST ResourcesTranslated) {
+    UNREFERENCED_PARAMETER(Device); UNREFERENCED_PARAMETER(ResourcesRaw); UNREFERENCED_PARAMETER(ResourcesTranslated);
+    return STATUS_SUCCESS;
+}
+
+static NTSTATUS AppleMagic_CreateQueues(_In_ WDFDEVICE Device) {
+    PDEVICE_CONTEXT ctx = GetDeviceContext(Device);
+    WDF_IO_QUEUE_CONFIG queueConfig; NTSTATUS status;
+    WDF_IO_QUEUE_CONFIG_INIT_DEFAULT_QUEUE(&queueConfig, WdfIoQueueDispatchParallel);
+    queueConfig.EvtIoDeviceControl = AppleMagic_EvtIoDeviceControl;
+    queueConfig.EvtIoInternalDeviceControl = AppleMagic_EvtIoInternalDeviceControl;
+    queueConfig.EvtIoStop = AppleMagic_EvtIoStop;
+    status = WdfIoQueueCreate(Device, &queueConfig, WDF_NO_OBJECT_ATTRIBUTES, &ctx->IoctlQueue);
+    return status;
+}
+
+static VOID AppleMagic_RingInit(_Inout_ PMAGIC_REPORT_RING Ring, _In_ WDFDEVICE Device) {
+    UNREFERENCED_PARAMETER(Device);
+    RtlZeroMemory(Ring->Data, sizeof(Ring->Data));
+    RtlZeroMemory(Ring->Lengths, sizeof(Ring->Lengths));
+    Ring->Head = -1;
+    WDF_OBJECT_ATTRIBUTES attr; WDF_OBJECT_ATTRIBUTES_INIT(&attr);
+    WdfSpinLockCreate(&attr, &Ring->Lock);
+}
+
+static VOID AppleMagic_RingPush(_Inout_ PMAGIC_REPORT_RING Ring, _In_reads_bytes_(Length) PUCHAR Data, _In_ USHORT Length) {
+    if (Length > MAGIC_MAX_REPORT_SIZE) return; // drop oversize
+    WdfSpinLockAcquire(Ring->Lock);
+    LONG next = (Ring->Head + 1) % MAGIC_RING_CAPACITY;
+    RtlCopyMemory(Ring->Data[next], Data, Length);
+    Ring->Lengths[next] = Length;
+    Ring->Head = next;
+    WdfSpinLockRelease(Ring->Lock);
+}
+
+// Simple parser stub for Magic Mouse style report (placeholder logic)
+BOOLEAN Magic_ParseMouseReport(_In_reads_bytes_(Length) const UCHAR* Report, _In_ USHORT Length, _Out_ PMAGIC_PARSED_MOUSE_REPORT Parsed) {
+    if (!Report || !Parsed || Length < 6) return FALSE;
+    RtlZeroMemory(Parsed, sizeof(*Parsed));
+    Parsed->ReportId = Report[0];
+    Parsed->Buttons = Report[1];
+    Parsed->DeltaX = (SHORT)((Report[2] << 8) | Report[3]);
+    Parsed->DeltaY = (SHORT)((Report[4] << 8) | Report[5]);
+    Parsed->ContactCount = 0; // real implementation should decode trailing contact data
+    return TRUE;
+}
+
+// Completion routine: called after lower driver fills read report buffer
+VOID AppleMagic_ReadReportCompletion(_In_ WDFREQUEST Request, _In_ WDFIOTARGET Target, _In_ PWDF_REQUEST_COMPLETION_PARAMS Params, _In_ WDFCONTEXT Context) {
+    UNREFERENCED_PARAMETER(Target);
+    WDFDEVICE device = (WDFDEVICE)Context;
+    if (Params->Type == WdfRequestTypeInternal && NT_SUCCESS(Params->IoStatus.Status)) {
+        PDEVICE_CONTEXT ctx = GetDeviceContext(device);
+        if (ctx) {
+            WDFMEMORY mem;
+            if (NT_SUCCESS(WdfRequestRetrieveOutputMemory(Request, &mem))) {
+                size_t len = WdfMemoryGetBuffer(mem, NULL) ? Params->Parameters.Ioctl.Output.BufferLength : 0;
+                if (len && len <= MAGIC_MAX_REPORT_SIZE) {
+                    PUCHAR bytes = (PUCHAR)Params->Parameters.Ioctl.Output.Buffer; // illustrative
+                    if (bytes) {
+                        AppleMagic_RingPush(&ctx->Ring, bytes, (USHORT)len);
+#ifdef ENABLE_VHF
+                        if (ctx->Vhf.Enabled) {
+                            MAGIC_PARSED_MOUSE_REPORT parsed;
+                            if (Magic_ParseMouseReport(bytes, (USHORT)len, &parsed)) {
+                                Magic_VhfPostMouseGesture(ctx, &parsed);
+                            }
+                        }
+#endif
+                    }
+                }
+            }
+        }
+    }
+    WdfRequestComplete(Request, Params->IoStatus.Status);
+}
+
+// Intercept internal device control to wrap IOCTL_HID_READ_REPORT
+VOID AppleMagic_EvtIoInternalDeviceControl(_In_ WDFQUEUE Queue, _In_ WDFREQUEST Request, _In_ size_t OutputBufferLength, _In_ size_t InputBufferLength, _In_ ULONG IoControlCode) {
+    UNREFERENCED_PARAMETER(OutputBufferLength); UNREFERENCED_PARAMETER(InputBufferLength);
+    WDFDEVICE device = WdfIoQueueGetDevice(Queue);
+    if (IoControlCode == IOCTL_HID_READ_REPORT) {
+        WDF_REQUEST_SEND_OPTIONS opts; WDF_REQUEST_SEND_OPTIONS_INIT(&opts, WDF_REQUEST_SEND_OPTION_SEND_AND_FORGET);
+        WdfRequestFormatRequestUsingCurrentType(Request);
+        WdfRequestSetCompletionRoutine(Request, AppleMagic_ReadReportCompletion, device);
+        if (!WdfRequestSend(Request, WdfDeviceGetIoTarget(device), &opts)) {
+            NTSTATUS status = WdfRequestGetStatus(Request);
+            WdfRequestComplete(Request, status);
+        }
+        return;
+    }
+    WDF_REQUEST_SEND_OPTIONS opts; WDF_REQUEST_SEND_OPTIONS_INIT(&opts, WDF_REQUEST_SEND_OPTION_SEND_AND_FORGET);
+    WdfRequestFormatRequestUsingCurrentType(Request);
+    if (!WdfRequestSend(Request, WdfDeviceGetIoTarget(device), &opts)) {
+        NTSTATUS status = WdfRequestGetStatus(Request);
+        WdfRequestComplete(Request, status);
+    }
+}
+
+// User-mode IOCTL handling
+VOID AppleMagic_EvtIoDeviceControl(_In_ WDFQUEUE Queue, _In_ WDFREQUEST Request, _In_ size_t OutputBufferLength, _In_ size_t InputBufferLength, _In_ ULONG IoControlCode) {
+    UNREFERENCED_PARAMETER(InputBufferLength);
+    WDFDEVICE device = WdfIoQueueGetDevice(Queue);
+    PDEVICE_CONTEXT ctx = GetDeviceContext(device);
+
+    if (IoControlCode == IOCTL_APPLE_MAGIC_GET_LAST_REPORT || IoControlCode == IOCTL_APPLE_MAGIC_PARSE_LAST) {
+        if (OutputBufferLength < sizeof(MAGIC_PARSED_MOUSE_REPORT) && IoControlCode == IOCTL_APPLE_MAGIC_PARSE_LAST) {
+            WdfRequestComplete(Request, STATUS_BUFFER_TOO_SMALL); return; }
+        PUCHAR outBuf; size_t bufLen;
+        if (!NT_SUCCESS(WdfRequestRetrieveOutputBuffer(Request, OutputBufferLength, (PVOID*)&outBuf, &bufLen))) {
+            WdfRequestComplete(Request, STATUS_INVALID_PARAMETER); return; }
+        USHORT copyLen = 0; UCHAR temp[MAGIC_MAX_REPORT_SIZE]; USHORT tempLen = 0;
+        WdfSpinLockAcquire(ctx->Ring.Lock);
+        if (ctx->Ring.Head >= 0) {
+            LONG idx = ctx->Ring.Head; tempLen = ctx->Ring.Lengths[idx];
+            if (tempLen > 0 && tempLen <= MAGIC_MAX_REPORT_SIZE) {
+                RtlCopyMemory(temp, ctx->Ring.Data[idx], tempLen);
+            } else { tempLen = 0; }
+        }
+        WdfSpinLockRelease(ctx->Ring.Lock);
+        if (IoControlCode == IOCTL_APPLE_MAGIC_GET_LAST_REPORT) {
+            if (tempLen > 0 && bufLen >= tempLen) { RtlCopyMemory(outBuf, temp, tempLen); copyLen = tempLen; }
+            WdfRequestCompleteWithInformation(Request, STATUS_SUCCESS, copyLen); return;
+        } else {
+            MAGIC_PARSED_MOUSE_REPORT parsed; BOOLEAN ok = Magic_ParseMouseReport(temp, tempLen, &parsed);
+            if (ok && bufLen >= sizeof(parsed)) { RtlCopyMemory(outBuf, &parsed, sizeof(parsed)); copyLen = (USHORT)sizeof(parsed); }
+            WdfRequestCompleteWithInformation(Request, ok ? STATUS_SUCCESS : STATUS_DATA_ERROR, copyLen); return;
+        }
+    }
+
+    WdfRequestComplete(Request, STATUS_INVALID_DEVICE_REQUEST);
+}
+
+#ifdef ENABLE_VHF
+NTSTATUS Magic_VhfInitialize(_In_ PDEVICE_CONTEXT Ctx) { return AppleMagic_VhfStart(Ctx); }
+VOID Magic_VhfCleanup(_In_ PDEVICE_CONTEXT Ctx) { if (Ctx->Vhf.VhfHandle) { VhfDelete(Ctx->Vhf.VhfHandle, TRUE); Ctx->Vhf.VhfHandle = NULL; Ctx->Vhf.Enabled = FALSE; } }
+
+static NTSTATUS AppleMagic_VhfStart(_In_ PDEVICE_CONTEXT ctx) {
+    VHF_CONFIG config; VHF_CONFIG_INIT(&config, VhfClientHidDevice); // Simplified; real descriptor needed
+    static const UCHAR hidDescriptor[] = { 0x05,0x01,0x09,0x02,0xA1,0x01,0x09,0x01,0xA1,0x00,0xC0,0xC0 }; // placeholder
+    config.HidReportDescriptor = (PUCHAR)hidDescriptor;
+    config.HidReportDescriptorLength = sizeof(hidDescriptor);
+    config.VendorId = 0x05AC; config.ProductId = 0xFFFF; config.VersionNumber = 0x0001;
+    NTSTATUS status = VhfCreate(&config, &ctx->Vhf.VhfHandle);
+    if (NT_SUCCESS(status)) { VhfStart(ctx->Vhf.VhfHandle); ctx->Vhf.Enabled = TRUE; }
+    return status;
+}
+
+NTSTATUS Magic_VhfPostMouseGesture(_In_ PDEVICE_CONTEXT Ctx, _In_ const MAGIC_PARSED_MOUSE_REPORT* Parsed) {
+    if (!Ctx->Vhf.Enabled || !Parsed) return STATUS_INVALID_DEVICE_STATE;
+    UCHAR report[4]; report[0] = 0; report[1] = Parsed->Buttons; report[2] = (UCHAR)Parsed->DeltaX; report[3] = (UCHAR)Parsed->DeltaY;
+    VHF_SEND_REPORT_OPTIONS opts; VHF_SEND_REPORT_OPTIONS_INIT(&opts);
+    return VhfReadReportSubmit(Ctx->Vhf.VhfHandle, report, sizeof(report), &opts);
+}
+#endif

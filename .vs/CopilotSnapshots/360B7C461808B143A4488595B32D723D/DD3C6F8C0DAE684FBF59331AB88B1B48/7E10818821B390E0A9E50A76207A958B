@@ -1,0 +1,27 @@
+﻿// AppleMagicIoctl.h - Shared user-mode header mirroring driver IOCTLs / GUID
+// KEEP IN SYNC with src/driver/AppleMagicFilter.h definitions (values must match)
+#pragma once
+
+#include <winioctl.h>
+#include <initguid.h>
+
+// Device interface GUID (duplicate definition allowed in user-mode)
+// {7B6E6F2F-4D2F-4A43-B5B2-9D7CB5A0B9E1}
+DEFINE_GUID(GUID_DEVINTERFACE_APPLE_MAGIC_RAW,
+0x7b6e6f2f, 0x4d2f, 0x4a43, 0xb5, 0xb2, 0x9d, 0x7c, 0xb5, 0xa0, 0xb9, 0xe1);
+
+// IOCTL codes (must match driver)
+#define IOCTL_APPLE_MAGIC_GET_LAST_REPORT CTL_CODE(FILE_DEVICE_KEYBOARD, 0x801, METHOD_BUFFERED, FILE_ANY_ACCESS)
+#define IOCTL_APPLE_MAGIC_PARSE_LAST      CTL_CODE(FILE_DEVICE_KEYBOARD, 0x802, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+#pragma pack(push,1)
+// Simplified parsed report structure (MUST stay in sync with driver layout if used)
+typedef struct _MAGIC_PARSED_MOUSE_REPORT_U {
+    unsigned char ReportId;
+    unsigned char Buttons;
+    short DeltaX;
+    short DeltaY;
+    unsigned char ContactCount;
+    unsigned char Reserved[32]; // placeholder future expansion
+} MAGIC_PARSED_MOUSE_REPORT_U, *PMAGIC_PARSED_MOUSE_REPORT_U;
+#pragma pack(pop)

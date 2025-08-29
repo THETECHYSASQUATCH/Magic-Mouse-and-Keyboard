@@ -1,0 +1,55 @@
+﻿; AppleMagicFilter.inf - DRAFT / UNSIGNED / NON-FUNCTIONAL
+[Version]
+Signature   = "$Windows NT$"
+Class       = HIDClass
+ClassGuid   = {745A17A0-74D3-11D0-B6FE-00A0C90F57DA}
+Provider    = %Author%
+DriverVer   = 08/17/2025,0.0.0.1
+CatalogFile = AppleMagicFilter.cat
+PnpLockDown = 1
+
+[DestinationDirs]
+CopyFiles_Files_Driver = 12 ; DIRID_DRIVERS
+
+[SourceDisksNames]
+1 = %DiskName%,,,
+
+[SourceDisksFiles]
+AppleMagicFilter.sys = 1
+
+[Manufacturer]
+%MfgName% = Standard,NTamd64
+
+[Standard.NTamd64]
+%AppleMagicFilter.DeviceDesc% = AppleMagicFilter_Inst, HID\VID_05AC&PID_0269
+%AppleMagicFilter.DeviceDesc% = AppleMagicFilter_Inst, HID\VID_05AC&PID_030D
+
+[AppleMagicFilter_Inst.NT]
+CopyFiles = CopyFiles_Files_Driver
+
+[AppleMagicFilter_Inst.NT.HW]
+AddReg = AppleMagicFilter_AddReg
+
+[AppleMagicFilter_AddReg]
+HKR, , UpperFilters, 0x00010000, "AppleMagicFilter"  ; REG_MULTI_SZ
+
+[CopyFiles_Files_Driver]
+AppleMagicFilter.sys
+
+[AppleMagicFilter_Inst.NT.Services]
+AddService = AppleMagicFilter, , AppleMagicFilter_Service_Inst
+
+[AppleMagicFilter_Service_Inst]
+DisplayName   = %AppleMagicFilter.SVCDESC%
+ServiceType   = 1 ; SERVICE_KERNEL_DRIVER
+StartType     = 3 ; SERVICE_DEMAND_START
+ErrorControl  = 1 ; SERVICE_ERROR_NORMAL
+ServiceBinary = %12%\AppleMagicFilter.sys
+LoadOrderGroup = Base
+
+[Strings]
+Author = "Example"
+MfgName = "Example"
+DiskName = "Apple Magic Filter Installation Disk"
+AppleMagicFilter.DeviceDesc = "Apple Magic Filter (Example)"
+AppleMagicFilter.SVCDESC = "Apple Magic Filter Driver"

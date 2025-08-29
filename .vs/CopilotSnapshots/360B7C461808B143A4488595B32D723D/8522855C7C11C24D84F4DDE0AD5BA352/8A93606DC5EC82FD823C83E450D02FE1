@@ -1,0 +1,113 @@
+﻿Apple Magic Mouse & Keyboard Windows Support Driver (Skeleton)
+==============================================================
+
+IMPORTANT: This repository currently contains only a skeleton (non‑functional) implementation and design notes to guide building a full Windows solution. A production quality driver requires the Windows Driver Kit (WDK), extensive testing, code signing, and security review.
+
+Goals
+-----
+Provide near macOS feature parity for:
+1. Magic Mouse (multi‑touch gestures: scroll, swipe, middle click / mission control style, smooth acceleration, battery level)
+2. Magic Keyboard (Fn key handling, media keys, brightness mapping, eject key mapping, battery level)
+3. Reliable Bluetooth Low Energy (HID over GATT) and wired (USB) operation
+
+High‑Level Architecture
+-----------------------
+Components:
+1. KMDF HID Upper Filter Driver (AppleMagicFilter.sys)
+   - Attaches above the HIDClass driver for Apple VID=0x05AC devices (specific PIDs list).
+   - Intercepts HID input reports (mouse & keyboard) and forwards/augments translated reports.
+   - Exposes custom IOCTL interface to a user‑mode service for advanced gesture processing & configuration.
+2. User‑Mode Service (AppleMagicSvc.exe) (NOT YET IMPLEMENTED)
+   - Windows Service (auto start, delayed) using Win32 + Wintab/Pointer Injection / Precision Touchpad emulation.
+   - Consumes raw multi‑touch data from filter (via device interface symbolic link & IOCTLs) and converts to Windows Pointer / Scroll / Gesture events.
+   - Applies user configurable mappings (JSON config) for gestures and Fn/media key overrides.
+3. Optional Virtual HID Miniport (Precision Touchpad Emulation) (PHASE 2)
+   - Create a virtual I2C/USB HID touchpad device to feed standardized multi‑finger gestures to Windows (so OS handles gesture interpretation: two finger scroll, pinch, etc.).
+4. Configuration UI (WPF / WinUI) (PHASE 2)
+   - Presents battery status, gesture customization, firmware info.
+
+Minimum Viable Increment (M1)
+----------------------------
+- Filter driver enumerates & attaches to Magic Mouse / Keyboard
+- Pass‑through reports unchanged (no regression vs default behavior)
+- Simple IOCTL to fetch last raw report (diagnostics)
+
+M2
+--
+- Parse and expose multi‑touch structure from Magic Mouse (report ID 0x29 / 0x28 variations) to user‑mode
+- Parse Fn & media key usage mapping; provide remap table
+
+M3
+--
+- User‑mode service translates multi‑touch to scrolling & swipes (fallback using SendInput / InjectMouseInput)
+
+M4
+--
+- Implement virtual Precision Touchpad miniport for richer gestures
+
+Magic Mouse Report Notes (Summary)
+----------------------------------
+(Values vary by generation; sniff using Bluetooth sniffer or USBPcap + Wireshark)
+ReportID 0x29 (example):
+ Byte 0: ReportID
+ Byte 1: Buttons bitfield (bit0=Left, bit1=?), other bits for surface touching states
+ Byte 2: X delta (signed) (HI)
+ Byte 3: X delta (LO)
+ Byte 4: Y delta (signed) (HI)
+ Byte 5: Y delta (LO)
+ Remaining: Variable number of contact records (6 bytes each) with contact ID, X,Y, size/pressure bits.
+
+(This must be validated per model; treat below as placeholder until traced.)
+
+Magic Keyboard Fn / Media Mapping
+---------------------------------
+The keyboard presents standard HID usages but Fn modifies semantics:
+- Fn+F1..F12 -> Standard F-keys (without Fn -> media by default or inverse depending on firmware)
+Strategy:
+- Maintain current Fn state (press/release) by observing dedicated usage (often usage 0x03 on Apple vendor page or a specific modifier bit)
+- If user selects "Use F1-F12 as standard keys" invert mapping table in user-mode before injecting.
+
+Driver Filter Strategy
+----------------------
+Attach as UpperFilter to: HID\VID_05AC&PID_xxxx*
+Forward all IRPs except the ones we need to inspect/modify:
+- IRP_MJ_INTERNAL_DEVICE_CONTROL for IOCTL_HID_READ_REPORT (post-process completion routine to copy raw report to circular buffer)
+- IOCTL_HID_GET_DEVICE_DESCRIPTOR / REPORT_DESCRIPTOR (optionally augment to expose additional feature report for battery; initial version: pass-through)
+- Power management (pass-through)
+
+Security / Reliability Considerations
+-------------------------------------
+- Avoid blocking HID read path (use nonpaged lookaside + lock-free ring buffer)
+- Validate buffer lengths to prevent overflow
+- Fail closed (on errors, simply pass-through original behavior)
+- Sign with EV certificate & HLK tests for distribution
+
+Battery Reporting
+-----------------
+Magic devices expose battery via a feature report or GATT characteristic. For BLE, user-mode service can open Bluetooth LE characteristic (Windows.Devices.Bluetooth.GenericAttributeProfile) and update UI. Optionally reflect via a custom HID power feature report for future integration.
+
+Files in this skeleton
+----------------------
+- src/driver/AppleMagicFilter.h : Shared structures & GUIDs
+- src/driver/AppleMagicFilter.c : KMDF driver skeleton / placeholders
+- src/driver/AppleMagicFilter.inf : Draft INF (NOT FINAL / NOT SIGNABLE)
+
+Build Instructions (Draft)
+-------------------------
+1. Install: Visual Studio + Windows 11 WDK + SDK
+2. Create a KMDF Driver (Empty) project, replace with these sources
+3. Adjust TargetVersion / KMDF Version to match environment
+4. Update INF with correct CatalogFile & driver version
+5. Test sign: Use signtool & test certificate installed in local machine root
+6. Enable testsigning mode (bcdedit /set testsigning on) for development
+
+Next Steps
+----------
+- Implement IOCTL interface & ring buffer
+- Implement report parser (Magic Mouse generations) with model detection via PID
+- Introduce user-mode service project
+- Add virtual HID device (Precision Touchpad) using VHF (Virtual HID Framework)
+
+DISCLAIMER
+---------
+This is experimental educational scaffolding only. Use at your own risk. Reverse engineering of proprietary protocols may have legal implications in some jurisdictions.

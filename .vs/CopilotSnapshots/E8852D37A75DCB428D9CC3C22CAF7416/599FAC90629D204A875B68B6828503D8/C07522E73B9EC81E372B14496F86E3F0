@@ -1,0 +1,235 @@
+﻿#include <ntddk.h>
+#include <wdf.h>
+#include <vhf.h>
+#include "..\..\Common\include\ApplePTP_Ioctls.h"
+#ifndef VhfWriteReport
+// Older headers may expose VhfReadReportSubmit; declare a simple fallback to avoid unresolved symbol.
+NTSTATUS VhfWriteReport(VHFHANDLE Handle, PUCHAR ReportBuffer, ULONG ReportBufferLen) {
+    UNREFERENCED_PARAMETER(Handle); UNREFERENCED_PARAMETER(ReportBuffer); UNREFERENCED_PARAMETER(ReportBufferLen);
+    return STATUS_NOT_SUPPORTED;
+}
+#endif
+
+DRIVER_INITIALIZE DriverEntry;
+EVT_WDF_DRIVER_DEVICE_ADD EvtDeviceAdd;
+EVT_WDF_OBJECT_CONTEXT_CLEANUP EvtDeviceCleanup;
+EVT_WDF_IO_QUEUE_IO_DEVICE_CONTROL EvtIoctl;
+
+#define REPORT_ID_INPUT   1
+#define REPORT_ID_FEATURE 2
+
+typedef struct _DEVICE_CONTEXT {
+    VHFHANDLE VhfHandle;
+    UCHAR MaxContacts;
+} DEVICE_CONTEXT, *PDEVICE_CONTEXT;
+WDF_DECLARE_CONTEXT_TYPE_WITH_NAME(DEVICE_CONTEXT, DevCtx)
+
+// Precision Touchpad HID Report Descriptor (supports up to 5 contacts)
+static const UCHAR g_PtpHidDesc[] = {
+    0x05, 0x0D,                    // USAGE_PAGE (Digitizers)
+    0x09, 0x05,                    // USAGE (Touch Pad)
+    0xA1, 0x01,                    // COLLECTION (Application)
+    0x85, REPORT_ID_INPUT,         //   REPORT_ID (1)
+
+    // Finger collection (one contact fields; host parses multiple by count)
+    0x09, 0x22,                    //   USAGE (Finger)
+    0xA1, 0x02,                    //   COLLECTION (Logical)
+    0x09, 0x47,                    //     USAGE (Confidence)
+    0x09, 0x42,                    //     USAGE (Tip Switch)
+    0x15, 0x00,                    //     LOGICAL_MINIMUM (0)
+    0x25, 0x01,                    //     LOGICAL_MAXIMUM (1)
+    0x75, 0x01,                    //     REPORT_SIZE (1)
+    0x95, 0x02,                    //     REPORT_COUNT (2)
+    0x81, 0x02,                    //     INPUT (Data,Var,Abs)
+    0x95, 0x06,                    //     REPORT_COUNT (6) padding to byte
+    0x81, 0x03,                    //     INPUT (Cnst,Var,Abs)
+
+    0x05, 0x01,                    //     USAGE_PAGE (Generic Desktop)
+    0x09, 0x30,                    //     USAGE (X)
+    0x09, 0x31,                    //     USAGE (Y)
+    0x16, 0x00, 0x00,              //     LOGICAL_MINIMUM (0)
+    0x26, 0xFF, 0x7F,              //     LOGICAL_MAXIMUM (32767)
+    0x75, 0x10,                    //     REPORT_SIZE (16)
+    0x95, 0x02,                    //     REPORT_COUNT (2)
+    0x81, 0x02,                    //     INPUT (Data,Var,Abs)
+
+    0x05, 0x0D,                    //     USAGE_PAGE (Digitizers)
+    0x09, 0x48,                    //     USAGE (Width)
+    0x09, 0x49,                    //     USAGE (Height)
+    0x16, 0x00, 0x00,
+    0x26, 0xFF, 0x7F,
+    0x75, 0x10,
+    0x95, 0x02,
+    0x81, 0x02,
+
+    0x09, 0x51,                    //     USAGE (Contact Identifier)
+    0x25, 0x7F,                    //     LOGICAL_MAXIMUM (127)
+    0x75, 0x08,
+    0x95, 0x01,
+    0x81, 0x02,                    //     INPUT (Data,Var,Abs)
+    0xC0,                          //   END_COLLECTION
+
+    // Contact Count
+    0x05, 0x0D,
+    0x09, 0x54,                    //   USAGE (Contact Count)
+    0x15, 0x00, 0x25, 0x05,        //   LOGICAL_MAXIMUM (5)
+    0x75, 0x08, 0x95, 0x01,
+    0x81, 0x02,                    //   INPUT (Data,Var,Abs)
+
+    // Buttons (click zones)
+    0x05, 0x09,                    //   USAGE_PAGE (Button)
+    0x19, 0x01, 0x29, 0x03,        //   USAGE_MIN (Button1) .. Button3
+    0x15, 0x00, 0x25, 0x01,
+    0x95, 0x03, 0x75, 0x01,
+    0x81, 0x02,                    //   INPUT (Data,Var,Abs)
+    0x95, 0x05, 0x75, 0x01,
+    0x81, 0x03,                    //   INPUT (Const,Var,Abs)
+
+    // Feature: Contact Count Maximum
+    0x85, REPORT_ID_FEATURE,       //   REPORT_ID (2)
+    0x09, 0x55,                    //   USAGE (Contact Count Maximum)
+    0x15, 0x00, 0x25, 0x05,        //   max 5 contacts
+    0x75, 0x08, 0x95, 0x01,
+    0xB1, 0x02,                    //   FEATURE (Data,Var,Abs)
+    0xC0                           // END_COLLECTION
+};
+
+static NTSTATUS CreateQueue(_In_ WDFDEVICE Dev, _Out_ WDFQUEUE* Q)
+{
+    WDF_IO_QUEUE_CONFIG q;
+    WDF_IO_QUEUE_CONFIG_INIT_DEFAULT_QUEUE(&q, WdfIoQueueDispatchParallel);
+    q.EvtIoDeviceControl = EvtIoctl;
+    return WdfIoQueueCreate(Dev, &q, WDF_NO_OBJECT_ATTRIBUTES, Q);
+}
+
+static VOID CleanupVhf(_In_ PDEVICE_CONTEXT Ctx)
+{
+    if (Ctx->VhfHandle) {
+        VhfDelete(Ctx->VhfHandle, TRUE);
+        Ctx->VhfHandle = NULL;
+    }
+}
+
+NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath)
+{
+    WDF_DRIVER_CONFIG cfg;
+    WDF_DRIVER_CONFIG_INIT(&cfg, EvtDeviceAdd);
+    return WdfDriverCreate(DriverObject, RegistryPath, WDF_NO_OBJECT_ATTRIBUTES, &cfg, WDF_NO_HANDLE);
+}
+
+NTSTATUS EvtDeviceAdd(_In_ WDFDRIVER Driver, _Inout_ PWDFDEVICE_INIT Init)
+{
+    UNREFERENCED_PARAMETER(Driver);
+    WdfDeviceInitSetDeviceType(Init, FILE_DEVICE_UNKNOWN);
+    WdfDeviceInitSetExclusive(Init, FALSE);
+
+    WDF_OBJECT_ATTRIBUTES attr;
+    WDF_OBJECT_ATTRIBUTES_INIT_CONTEXT_TYPE(&attr, DEVICE_CONTEXT);
+    attr.EvtCleanupCallback = EvtDeviceCleanup;
+
+    WDFDEVICE dev;
+    NTSTATUS status = WdfDeviceCreate(&Init, &attr, &dev);
+    if (!NT_SUCCESS(status)) return status;
+
+    // Create device interface for user-mode to open
+    status = WdfDeviceCreateDeviceInterface(dev, &GUID_DEVINTERFACE_APPLEPTP, NULL);
+    if (!NT_SUCCESS(status)) return status;
+
+    WDFQUEUE q;
+    status = CreateQueue(dev, &q);
+    if (!NT_SUCCESS(status)) return status;
+
+    // Configure VHF
+    PDEVICE_CONTEXT ctx = DevCtx(dev);
+    ctx->MaxContacts = 5;
+
+    VHF_CONFIG vhf;
+#if defined(VHF_CONFIG_INIT)
+    VHF_CONFIG_INIT(&vhf, WdfDeviceWdmGetDeviceObject(dev), (USHORT)sizeof(g_PtpHidDesc), (PUCHAR)g_PtpHidDesc);
+#else
+    RtlZeroMemory(&vhf, sizeof(vhf));
+#endif
+    vhf.VendorID = 0x05AC;
+    vhf.ProductID = 0x0B00;
+    vhf.VersionNumber = 0x0001;
+
+    status = VhfCreate(&vhf, &ctx->VhfHandle);
+    if (!NT_SUCCESS(status)) return status;
+    status = VhfStart(ctx->VhfHandle);
+    return status;
+}
+
+VOID EvtDeviceCleanup(_In_ WDFOBJECT Obj)
+{
+    PDEVICE_CONTEXT ctx = DevCtx((WDFDEVICE)Obj);
+    CleanupVhf(ctx);
+}
+
+// Build a HID input report buffer matching g_PtpHidDesc
+// Layout per contact: [bitflags][X lo, X hi][Y lo, Y hi][W lo, W hi][H lo, H hi][ContactId]
+// Then: [ContactCount][Buttons + padding]
+static VOID BuildInputReport(_In_reads_bytes_(InLen) PAPPLEPTP_FRAME In, _Out_writes_bytes_(BufLen) PUCHAR Buf, _In_ size_t BufLen, _Out_ size_t* ReportLen)
+{
+    RtlZeroMemory(Buf, BufLen);
+    PUCHAR p = Buf;
+    *p++ = REPORT_ID_INPUT;
+
+    UCHAR count = (In->ContactCount > APPLEPTP_MAX_CONTACTS) ? APPLEPTP_MAX_CONTACTS : In->ContactCount;
+    for (UCHAR i = 0; i < count; i++) {
+        APPLEPTP_CONTACT c = In->Contacts[i];
+        UCHAR flags = 0;
+        if (c.Confidence) flags |= 0x01; // per descriptor order: Confidence bit first
+        if (c.TipSwitch)  flags |= 0x02;
+        *p++ = flags;
+
+        *p++ = (UCHAR)(c.X & 0xFF);
+        *p++ = (UCHAR)((c.X >> 8) & 0xFF);
+        *p++ = (UCHAR)(c.Y & 0xFF);
+        *p++ = (UCHAR)((c.Y >> 8) & 0xFF);
+        *p++ = (UCHAR)(c.Width & 0xFF);
+        *p++ = (UCHAR)((c.Width >> 8) & 0xFF);
+        *p++ = (UCHAR)(c.Height & 0xFF);
+        *p++ = (UCHAR)((c.Height >> 8) & 0xFF);
+        *p++ = (UCHAR)(c.ContactId & 0xFF);
+    }
+
+    *p++ = count;                      // Contact Count
+    UCHAR buttons = In->Buttons & 0x07;
+    *p++ = buttons;                    // Buttons (3 bits used)
+    // 5 bits padding auto due to next writes not present
+
+    *ReportLen = (size_t)(p - Buf);
+}
+
+VOID EvtIoctl(_In_ WDFQUEUE Q, _In_ WDFREQUEST R, _In_ size_t OutLen, _In_ size_t InLen, _In_ ULONG Ioctl)
+{
+    UNREFERENCED_PARAMETER(OutLen);
+    PDEVICE_CONTEXT ctx = DevCtx(WdfIoQueueGetDevice(Q));
+    NTSTATUS status = STATUS_INVALID_DEVICE_REQUEST;
+
+    if (Ioctl == IOCTL_APPLEPTP_INJECT_FRAME) {
+        if (InLen < sizeof(APPLEPTP_FRAME)) {
+            status = STATUS_BUFFER_TOO_SMALL;
+            WdfRequestComplete(R, status);
+            return;
+        }
+        PAPPLEPTP_FRAME frame = NULL;
+        size_t sz = 0;
+        status = WdfRequestRetrieveInputBuffer(R, sizeof(APPLEPTP_FRAME), (PVOID*)&frame, &sz);
+        if (!NT_SUCCESS(status)) { WdfRequestComplete(R, status); return; }
+
+        UCHAR report[128];
+        size_t repLen = 0;
+        BuildInputReport(frame, report, sizeof(report), &repLen);
+
+        // Older WDKs may not define VHF_WRITE_REPORT_OPTIONS (introduced in later versions)
+#if defined(VHF_WRITE_REPORT_OPTIONS_VERSION) || defined(VHF_WRITE_REPORT_OPTIONS_INIT)
+        VHF_WRITE_REPORT_OPTIONS opts; VHF_WRITE_REPORT_OPTIONS_INIT(&opts);
+        status = VhfWriteReport(ctx->VhfHandle, report, (ULONG)repLen, &opts);
+#else
+        status = VhfWriteReport(ctx->VhfHandle, report, (ULONG)repLen);
+#endif
+    }
+
+    WdfRequestComplete(R, status);
+}

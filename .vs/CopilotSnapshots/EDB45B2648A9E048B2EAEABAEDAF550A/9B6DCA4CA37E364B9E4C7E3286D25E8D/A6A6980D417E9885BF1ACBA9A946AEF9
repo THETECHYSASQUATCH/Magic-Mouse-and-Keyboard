@@ -1,0 +1,60 @@
+﻿#include <ntddk.h>
+#include <wdf.h>
+#include <hidclass.h>
+#define INITGUID
+#include "..\..\Common\include\IoctlContract.h"
+
+extern "C" DRIVER_INITIALIZE DriverEntry;
+EVT_WDF_DRIVER_DEVICE_ADD AppleInput_EvtDeviceAdd;
+EVT_WDF_IO_QUEUE_IO_DEVICE_CONTROL AppleInput_EvtIoDeviceControl;
+
+static NTSTATUS AppleInput_CreateDefaultQueue(_In_ WDFDEVICE Device);
+
+extern "C" NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath)
+{
+    WDF_DRIVER_CONFIG config; NTSTATUS status;
+    WDF_DRIVER_CONFIG_INIT(&config, AppleInput_EvtDeviceAdd);
+    status = WdfDriverCreate(DriverObject, RegistryPath, WDF_NO_OBJECT_ATTRIBUTES, &config, WDF_NO_HANDLE);
+    return status;
+}
+
+NTSTATUS AppleInput_EvtDeviceAdd(_In_ WDFDRIVER Driver, _Inout_ PWDFDEVICE_INIT DeviceInit)
+{
+    UNREFERENCED_PARAMETER(Driver);
+    // Act as an upper filter if intended
+    WdfFdoInitSetFilter(DeviceInit);
+
+    WDFDEVICE device; NTSTATUS status = WdfDeviceCreate(&DeviceInit, WDF_NO_OBJECT_ATTRIBUTES, &device);
+    if (!NT_SUCCESS(status)) return status;
+
+    status = AppleInput_CreateDefaultQueue(device);
+    if (!NT_SUCCESS(status)) return status;
+
+    // (Optional) expose a device interface for user-mode client
+    status = WdfDeviceCreateDeviceInterface(device, &GUID_DEVINTERFACE_APPLEINPUT, NULL);
+    return NT_SUCCESS(status) ? STATUS_SUCCESS : status;
+}
+
+static NTSTATUS AppleInput_CreateDefaultQueue(_In_ WDFDEVICE Device)
+{
+    WDF_IO_QUEUE_CONFIG qcfg; WDF_IO_QUEUE_CONFIG_INIT_DEFAULT_QUEUE(&qcfg, WdfIoQueueDispatchParallel);
+    qcfg.EvtIoDeviceControl = AppleInput_EvtIoDeviceControl;
+    WDFQUEUE queue; return WdfIoQueueCreate(Device, &qcfg, WDF_NO_OBJECT_ATTRIBUTES, &queue);
+}
+
+VOID AppleInput_EvtIoDeviceControl(_In_ WDFQUEUE Queue, _In_ WDFREQUEST Request, _In_ size_t OutLen, _In_ size_t InLen, _In_ ULONG Ioctl)
+{
+    UNREFERENCED_PARAMETER(Queue); UNREFERENCED_PARAMETER(OutLen); UNREFERENCED_PARAMETER(InLen);
+    NTSTATUS status = STATUS_INVALID_DEVICE_REQUEST;
+    switch (Ioctl) {
+    case APPLEINPUT_IOCTL_SET_CONFIG:
+        status = STATUS_SUCCESS; // TODO: parse config buffer
+        break;
+    case APPLEINPUT_IOCTL_UPDATE_BATTERY:
+        status = STATUS_SUCCESS; // TODO: return/update battery info
+        break;
+    default:
+        break;
+    }
+    WdfRequestComplete(Request, status);
+}

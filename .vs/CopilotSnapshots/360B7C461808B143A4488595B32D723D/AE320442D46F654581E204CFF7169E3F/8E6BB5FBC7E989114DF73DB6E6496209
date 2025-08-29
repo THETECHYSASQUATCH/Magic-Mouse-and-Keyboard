@@ -1,0 +1,159 @@
+﻿// AppleMagicFilter.c - KMDF Upper Filter for Apple Magic devices (illustrative)
+// Captures HID input reports into a ring buffer and exposes last report via IOCTL.
+// DISCLAIMER: Incomplete – for educational scaffolding only.
+
+#include "AppleMagicFilter.h"
+
+// Forward declarations
+static NTSTATUS AppleMagic_CreateQueues(_In_ WDFDEVICE Device);
+static VOID AppleMagic_RingInit(_Inout_ PMAGIC_REPORT_RING Ring, _In_ WDFDEVICE Device);
+static VOID AppleMagic_RingPush(_Inout_ PMAGIC_REPORT_RING Ring, _In_reads_bytes_(Length) PUCHAR Data, _In_ USHORT Length);
+
+static VOID AppleMagic_EvtIoStop(_In_ WDFQUEUE Queue, _In_ WDFREQUEST Request, _In_ ULONG ActionFlags) {
+    UNREFERENCED_PARAMETER(Queue); UNREFERENCED_PARAMETER(ActionFlags); WdfRequestComplete(Request, STATUS_SUCCESS);
+}
+
+NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath) {
+    WDF_DRIVER_CONFIG config; NTSTATUS status; WDF_OBJECT_ATTRIBUTES attributes;
+    WDF_DRIVER_CONFIG_INIT(&config, AppleMagic_EvtDeviceAdd);
+    WDF_OBJECT_ATTRIBUTES_INIT(&attributes);
+    status = WdfDriverCreate(DriverObject, RegistryPath, &attributes, &config, WDF_NO_HANDLE);
+    return status;
+}
+
+NTSTATUS AppleMagic_EvtDeviceAdd(_In_ WDFDRIVER Driver, _Inout_ PWDFDEVICE_INIT DeviceInit) {
+    UNREFERENCED_PARAMETER(Driver);
+    WDF_PNPPOWER_EVENT_CALLBACKS pnpCallbacks; WDF_OBJECT_ATTRIBUTES devAttributes; WDFDEVICE device; NTSTATUS status;
+
+    WdfFdoInitSetFilter(DeviceInit); // Upper filter
+
+    WDF_PNPPOWER_EVENT_CALLBACKS_INIT(&pnpCallbacks);
+    pnpCallbacks.EvtDevicePrepareHardware = AppleMagic_EvtPrepareHardware;
+    WdfDeviceInitSetPnpPowerEventCallbacks(DeviceInit, &pnpCallbacks);
+
+    WDF_OBJECT_ATTRIBUTES_INIT_CONTEXT_TYPE(&devAttributes, DEVICE_CONTEXT);
+
+    status = WdfDeviceCreate(&DeviceInit, &devAttributes, &device);
+    if (!NT_SUCCESS(status)) return status;
+
+    PDEVICE_CONTEXT ctx = GetDeviceContext(device);
+    AppleMagic_RingInit(&ctx->Ring, device);
+
+    status = AppleMagic_CreateQueues(device);
+    if (!NT_SUCCESS(status)) return status;
+
+    status = WdfDeviceCreateDeviceInterface(device, &GUID_DEVINTERFACE_APPLE_MAGIC_RAW, NULL);
+    return status;
+}
+
+NTSTATUS AppleMagic_EvtPrepareHardware(_In_ WDFDEVICE Device, _In_ WDFCMRESLIST ResourcesRaw, _In_ WDFCMRESLIST ResourcesTranslated) {
+    UNREFERENCED_PARAMETER(Device); UNREFERENCED_PARAMETER(ResourcesRaw); UNREFERENCED_PARAMETER(ResourcesTranslated);
+    return STATUS_SUCCESS;
+}
+
+static NTSTATUS AppleMagic_CreateQueues(_In_ WDFDEVICE Device) {
+    PDEVICE_CONTEXT ctx = GetDeviceContext(Device);
+    WDF_IO_QUEUE_CONFIG queueConfig; NTSTATUS status;
+    WDF_IO_QUEUE_CONFIG_INIT_DEFAULT_QUEUE(&queueConfig, WdfIoQueueDispatchParallel);
+    queueConfig.EvtIoDeviceControl = AppleMagic_EvtIoDeviceControl;
+    queueConfig.EvtIoInternalDeviceControl = AppleMagic_EvtIoInternalDeviceControl;
+    queueConfig.EvtIoStop = AppleMagic_EvtIoStop;
+    status = WdfIoQueueCreate(Device, &queueConfig, WDF_NO_OBJECT_ATTRIBUTES, &ctx->IoctlQueue);
+    return status;
+}
+
+static VOID AppleMagic_RingInit(_Inout_ PMAGIC_REPORT_RING Ring, _In_ WDFDEVICE Device) {
+    UNREFERENCED_PARAMETER(Device);
+    RtlZeroMemory(Ring->Data, sizeof(Ring->Data));
+    RtlZeroMemory(Ring->Lengths, sizeof(Ring->Lengths));
+    Ring->Head = -1;
+    WDF_OBJECT_ATTRIBUTES attr; WDF_OBJECT_ATTRIBUTES_INIT(&attr);
+    WdfSpinLockCreate(&attr, &Ring->Lock);
+}
+
+static VOID AppleMagic_RingPush(_Inout_ PMAGIC_REPORT_RING Ring, _In_reads_bytes_(Length) PUCHAR Data, _In_ USHORT Length) {
+    if (Length > MAGIC_MAX_REPORT_SIZE) return; // drop oversize
+    WdfSpinLockAcquire(Ring->Lock);
+    LONG next = (Ring->Head + 1) % MAGIC_RING_CAPACITY;
+    RtlCopyMemory(Ring->Data[next], Data, Length);
+    Ring->Lengths[next] = Length;
+    Ring->Head = next;
+    WdfSpinLockRelease(Ring->Lock);
+}
+
+// Completion routine: called after lower driver fills read report buffer
+VOID AppleMagic_ReadReportCompletion(_In_ WDFREQUEST Request, _In_ WDFIOTARGET Target, _In_ PWDF_REQUEST_COMPLETION_PARAMS Params, _In_ WDFCONTEXT Context) {
+    UNREFERENCED_PARAMETER(Target); UNREFERENCED_PARAMETER(Context);
+    if (Params->Type == WdfRequestTypeInternal && NT_SUCCESS(Params->IoStatus.Status)) {
+        // Capture the HID input report
+        PDEVICE_CONTEXT ctx = GetDeviceContext((WDFDEVICE)Context); // context is device
+        if (ctx) {
+            size_t len = Params->Parameters.Ioctl.Output.BufferLength;
+            if (len <= MAGIC_MAX_REPORT_SIZE) {
+                // Retrieve system buffer pointer (METHOD_NEITHER not used for HID internal read)
+                PUCHAR reportBytes = (PUCHAR)Params->Parameters.Ioctl.Output.Buffer; // conceptual; may differ in real stack
+                if (reportBytes) {
+                    AppleMagic_RingPush(&ctx->Ring, reportBytes, (USHORT)len);
+                }
+            }
+        }
+    }
+    WdfRequestComplete(Request, Params->IoStatus.Status);
+}
+
+// Intercept internal device control to wrap IOCTL_HID_READ_REPORT
+VOID AppleMagic_EvtIoInternalDeviceControl(_In_ WDFQUEUE Queue, _In_ WDFREQUEST Request, _In_ size_t OutputBufferLength, _In_ size_t InputBufferLength, _In_ ULONG IoControlCode) {
+    UNREFERENCED_PARAMETER(OutputBufferLength); UNREFERENCED_PARAMETER(InputBufferLength);
+    WDFDEVICE device = WdfIoQueueGetDevice(Queue);
+    if (IoControlCode == IOCTL_HID_READ_REPORT) {
+        // Forward with completion routine
+        WDF_REQUEST_SEND_OPTIONS opts; WDF_REQUEST_SEND_OPTIONS_INIT(&opts, WDF_REQUEST_SEND_OPTION_SEND_AND_FORGET);
+        WdfRequestFormatRequestUsingCurrentType(Request);
+        WdfRequestSetCompletionRoutine(Request, AppleMagic_ReadReportCompletion, device);
+        if (!WdfRequestSend(Request, WdfDeviceGetIoTarget(device), &opts)) {
+            NTSTATUS status = WdfRequestGetStatus(Request);
+            WdfRequestComplete(Request, status);
+        }
+        return;
+    }
+    // Pass-through other internal IOCTLs
+    WDF_REQUEST_SEND_OPTIONS opts; WDF_REQUEST_SEND_OPTIONS_INIT(&opts, WDF_REQUEST_SEND_OPTION_SEND_AND_FORGET);
+    WdfRequestFormatRequestUsingCurrentType(Request);
+    if (!WdfRequestSend(Request, WdfDeviceGetIoTarget(device), &opts)) {
+        NTSTATUS status = WdfRequestGetStatus(Request);
+        WdfRequestComplete(Request, status);
+    }
+}
+
+// User-mode IOCTL handling
+VOID AppleMagic_EvtIoDeviceControl(_In_ WDFQUEUE Queue, _In_ WDFREQUEST Request, _In_ size_t OutputBufferLength, _In_ size_t InputBufferLength, _In_ ULONG IoControlCode) {
+    UNREFERENCED_PARAMETER(InputBufferLength);
+    WDFDEVICE device = WdfIoQueueGetDevice(Queue);
+    PDEVICE_CONTEXT ctx = GetDeviceContext(device);
+
+    if (IoControlCode == IOCTL_APPLE_MAGIC_GET_LAST_REPORT) {
+        if (OutputBufferLength < MAGIC_MAX_REPORT_SIZE) {
+            WdfRequestComplete(Request, STATUS_BUFFER_TOO_SMALL);
+            return;
+        }
+        PUCHAR outBuf; size_t bufLen;
+        if (!NT_SUCCESS(WdfRequestRetrieveOutputBuffer(Request, MAGIC_MAX_REPORT_SIZE, (PVOID*)&outBuf, &bufLen))) {
+            WdfRequestComplete(Request, STATUS_INVALID_PARAMETER);
+            return;
+        }
+        USHORT copyLen = 0;
+        WdfSpinLockAcquire(ctx->Ring.Lock);
+        if (ctx->Ring.Head >= 0) {
+            LONG idx = ctx->Ring.Head;
+            copyLen = ctx->Ring.Lengths[idx];
+            if (copyLen > 0 && copyLen <= MAGIC_MAX_REPORT_SIZE) {
+                RtlCopyMemory(outBuf, ctx->Ring.Data[idx], copyLen);
+            }
+        }
+        WdfSpinLockRelease(ctx->Ring.Lock);
+        WdfRequestCompleteWithInformation(Request, STATUS_SUCCESS, copyLen);
+        return;
+    }
+
+    WdfRequestComplete(Request, STATUS_INVALID_DEVICE_REQUEST);
+}
