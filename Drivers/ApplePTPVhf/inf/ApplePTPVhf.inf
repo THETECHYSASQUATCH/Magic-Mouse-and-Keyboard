@@ -55,6 +55,9 @@ ServiceType=1
 StartType=3
 ErrorControl=1
 ServiceBinary=%12%\ApplePTPVhf.sys
+LoadOrderGroup=Extended Base
+Dependencies=vhf
+Security="D:P(A;;GA;;;SY)(A;;GA;;;BA)"
 
 [Strings]
 ManufacturerName="YourCo"

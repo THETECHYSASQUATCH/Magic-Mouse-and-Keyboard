@@ -30,7 +30,7 @@
     <PlatformToolset>WindowsKernelModeDriver10.0</PlatformToolset>
     <ConfigurationType>Driver</ConfigurationType>
     <DriverType>KMDF</DriverType>
-    <DriverTargetPlatform>Desktop</DriverTargetPlatform>
+    <DriverTargetPlatform>Universal</DriverTargetPlatform>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
@@ -40,7 +40,7 @@
     <PlatformToolset>WindowsKernelModeDriver10.0</PlatformToolset>
     <ConfigurationType>Driver</ConfigurationType>
     <DriverType>KMDF</DriverType>
-    <DriverTargetPlatform>Desktop</DriverTargetPlatform>
+    <DriverTargetPlatform>Universal</DriverTargetPlatform>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
@@ -50,7 +50,7 @@
     <PlatformToolset>WindowsKernelModeDriver10.0</PlatformToolset>
     <ConfigurationType>Driver</ConfigurationType>
     <DriverType>KMDF</DriverType>
-    <DriverTargetPlatform>Desktop</DriverTargetPlatform>
+    <DriverTargetPlatform>Universal</DriverTargetPlatform>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
@@ -60,20 +60,23 @@
     <PlatformToolset>WindowsKernelModeDriver10.0</PlatformToolset>
     <ConfigurationType>Driver</ConfigurationType>
     <DriverType>KMDF</DriverType>
-    <DriverTargetPlatform>Desktop</DriverTargetPlatform>
+    <DriverTargetPlatform>Universal</DriverTargetPlatform>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\ApplePTPVhf\</IntDir>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <!-- KMDF explicit version -->
+  <!-- Enhanced KMDF configuration for Secure Boot compliance -->
   <PropertyGroup>
     <KMDF_VERSION_MAJOR>1</KMDF_VERSION_MAJOR>
     <KMDF_VERSION_MINOR>15</KMDF_VERSION_MINOR>
     <EnableTestSign Condition="'$(EnableTestSign)'==''">false</EnableTestSign>
     <TestCertSubject Condition="'$(TestCertSubject)'==''">CN=AppleMagicTest</TestCertSubject>
+    <EnableProductionSign Condition="'$(EnableProductionSign)'==''">false</EnableProductionSign>
+    <ProductionCertThumbprint Condition="'$(ProductionCertThumbprint)'==''"></ProductionCertThumbprint>
     <RunInf2Cat>true</RunInf2Cat>
+    <SignTool Condition="'$(SignTool)'==''">SignTool</SignTool>
   </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="src\ApplePTPVhf.c" />
@@ -96,7 +99,10 @@
     <DriverSign>
       <FileDigestAlgorithm>sha256</FileDigestAlgorithm>
       <SignMode Condition="'$(EnableTestSign)'=='true'">TestSign</SignMode>
+      <SignMode Condition="'$(EnableProductionSign)'=='true'">ProductionSign</SignMode>
       <TestCertificate Condition="'$(EnableTestSign)'=='true'">$(TestCertSubject)</TestCertificate>
+      <CertificateThumbprint Condition="'$(EnableProductionSign)'=='true'">$(ProductionCertThumbprint)</CertificateThumbprint>
+      <TimestampServer Condition="'$(EnableProductionSign)'=='true'">http://timestamp.digicert.com</TimestampServer>
     </DriverSign>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -110,7 +116,10 @@
     <DriverSign>
       <FileDigestAlgorithm>sha256</FileDigestAlgorithm>
       <SignMode Condition="'$(EnableTestSign)'=='true'">TestSign</SignMode>
+      <SignMode Condition="'$(EnableProductionSign)'=='true'">ProductionSign</SignMode>
       <TestCertificate Condition="'$(EnableTestSign)'=='true'">$(TestCertSubject)</TestCertificate>
+      <CertificateThumbprint Condition="'$(EnableProductionSign)'=='true'">$(ProductionCertThumbprint)</CertificateThumbprint>
+      <TimestampServer Condition="'$(EnableProductionSign)'=='true'">http://timestamp.digicert.com</TimestampServer>
     </DriverSign>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
