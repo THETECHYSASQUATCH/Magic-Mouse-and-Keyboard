@@ -113,6 +113,12 @@ static VOID CleanupVhf(_In_ PDEVICE_CONTEXT Ctx)
 NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath)
 {
     WDF_DRIVER_CONFIG cfg;
+    
+    // Security validation: Verify parameters for Secure Boot compliance
+    if (!DriverObject || !RegistryPath) {
+        return STATUS_INVALID_PARAMETER;
+    }
+    
     WDF_DRIVER_CONFIG_INIT(&cfg, EvtDeviceAdd);
     return WdfDriverCreate(DriverObject, RegistryPath, WDF_NO_OBJECT_ATTRIBUTES, &cfg, WDF_NO_HANDLE);
 }
@@ -120,6 +126,12 @@ NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Regi
 static NTSTATUS EvtDeviceAdd(_In_ WDFDRIVER Driver, _Inout_ PWDFDEVICE_INIT Init)
 {
     UNREFERENCED_PARAMETER(Driver);
+    
+    // Security validation: Verify device initialization parameters
+    if (!Init) {
+        return STATUS_INVALID_PARAMETER;
+    }
+    
     WdfDeviceInitSetDeviceType(Init, FILE_DEVICE_UNKNOWN);
     WdfDeviceInitSetExclusive(Init, FALSE);
 
@@ -207,8 +219,15 @@ static VOID EvtIoctl(_In_ WDFQUEUE Q, _In_ WDFREQUEST R, _In_ size_t OutLen, _In
     PDEVICE_CONTEXT ctx = DevCtx(WdfIoQueueGetDevice(Q));
     NTSTATUS status = STATUS_INVALID_DEVICE_REQUEST;
 
+    // Security validation: Verify input parameters and context
+    if (!Q || !R || !ctx) {
+        WdfRequestComplete(R, STATUS_INVALID_PARAMETER);
+        return;
+    }
+
     if (Ioctl == IOCTL_APPLEPTP_INJECT_FRAME) {
-        if (InLen < sizeof(APPLEPTP_FRAME)) {
+        // Security: Validate input length bounds
+        if (InLen < sizeof(APPLEPTP_FRAME) || InLen > 1024) {
             status = STATUS_BUFFER_TOO_SMALL;
             WdfRequestComplete(R, status);
             return;
@@ -217,6 +236,12 @@ static VOID EvtIoctl(_In_ WDFQUEUE Q, _In_ WDFREQUEST R, _In_ size_t OutLen, _In
         size_t sz = 0;
         status = WdfRequestRetrieveInputBuffer(R, sizeof(APPLEPTP_FRAME), (PVOID*)&frame, &sz);
         if (!NT_SUCCESS(status)) { WdfRequestComplete(R, status); return; }
+
+        // Security: Validate frame pointer before use
+        if (!frame) {
+            WdfRequestComplete(R, STATUS_INVALID_PARAMETER);
+            return;
+        }
 
         UCHAR report[128];
         size_t repLen = 0;

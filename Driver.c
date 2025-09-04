@@ -59,6 +59,13 @@ Return Value:
     WDF_OBJECT_ATTRIBUTES attributes;
 
     //
+    // Security validation: Verify parameters for Secure Boot compliance
+    //
+    if (!DriverObject || !RegistryPath) {
+        return STATUS_INVALID_PARAMETER;
+    }
+
+    //
     // Initialize WPP Tracing
     //
     WPP_INIT_TRACING(DriverObject, RegistryPath);

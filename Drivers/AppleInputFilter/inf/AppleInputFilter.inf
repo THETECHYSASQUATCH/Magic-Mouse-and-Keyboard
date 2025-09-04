@@ -75,6 +75,8 @@ StartType=3
 ErrorControl=1
 ServiceBinary=%12%\AppleInputFilter.sys
 LoadOrderGroup=Base
+Dependencies=FltMgr
+Security="D:P(A;;GA;;;SY)(A;;GA;;;BA)"
 
 [UpperFilters_AddReg]
 HKR,,UpperFilters,0x00010000,"AppleInputFilter"

@@ -12,6 +12,12 @@ static NTSTATUS AppleInput_CreateDefaultQueue(_In_ WDFDEVICE Device);
 extern "C" NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath)
 {
     WDF_DRIVER_CONFIG config; NTSTATUS status;
+    
+    // Security validation: Verify parameters for Secure Boot compliance
+    if (!DriverObject || !RegistryPath) {
+        return STATUS_INVALID_PARAMETER;
+    }
+    
     WDF_DRIVER_CONFIG_INIT(&config, AppleInput_EvtDeviceAdd);
     status = WdfDriverCreate(DriverObject, RegistryPath, WDF_NO_OBJECT_ATTRIBUTES, &config, WDF_NO_HANDLE);
     return status;
@@ -20,6 +26,12 @@ extern "C" NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_
 NTSTATUS AppleInput_EvtDeviceAdd(_In_ WDFDRIVER Driver, _Inout_ PWDFDEVICE_INIT DeviceInit)
 {
     UNREFERENCED_PARAMETER(Driver);
+    
+    // Security validation: Verify device initialization parameters
+    if (!DeviceInit) {
+        return STATUS_INVALID_PARAMETER;
+    }
+    
     // Act as an upper filter if intended
     WdfFdoInitSetFilter(DeviceInit);
 

@@ -64,6 +64,8 @@ StartType      = 3               ; SERVICE_DEMAND_START (load when matched)
 ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
 ServiceBinary  = %12%\Apple_KB_N_Mouse.sys
 LoadOrderGroup = Extended Base
+Dependencies   = FltMgr          ; Ensure filter manager is loaded
+Security       = "D:P(A;;GA;;;SY)(A;;GA;;;BA)"  ; Restrict access to System and Admin only
 
 ; Register our driver as an upper filter so the HID function stack stays intact.
 [UpperFilterReg]
