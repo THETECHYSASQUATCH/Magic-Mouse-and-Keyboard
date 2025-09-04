@@ -103,10 +103,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <DebuggerFlavor>DbgengKernelDebugger</DebuggerFlavor>
   </PropertyGroup>
-  <!-- Added properties for conditional test signing -->
+  <!-- Enhanced properties for Secure Boot and conditional signing -->
   <PropertyGroup>
     <EnableTestSign Condition="'$(EnableTestSign)'==''">false</EnableTestSign>
     <TestCertSubject Condition="'$(TestCertSubject)'==''">CN=AppleMagicTest</TestCertSubject>
+    <EnableProductionSign Condition="'$(EnableProductionSign)'==''">false</EnableProductionSign>
+    <ProductionCertThumbprint Condition="'$(ProductionCertThumbprint)'==''"></ProductionCertThumbprint>
+    <SignTool Condition="'$(SignTool)'==''">SignTool</SignTool>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -123,7 +126,10 @@
     <DriverSign>
       <FileDigestAlgorithm>sha256</FileDigestAlgorithm>
       <SignMode Condition="'$(EnableTestSign)'=='true'">TestSign</SignMode>
+      <SignMode Condition="'$(EnableProductionSign)'=='true'">ProductionSign</SignMode>
       <TestCertificate Condition="'$(EnableTestSign)'=='true'">$(TestCertSubject)</TestCertificate>
+      <CertificateThumbprint Condition="'$(EnableProductionSign)'=='true'">$(ProductionCertThumbprint)</CertificateThumbprint>
+      <TimestampServer Condition="'$(EnableProductionSign)'=='true'">http://timestamp.digicert.com</TimestampServer>
     </DriverSign>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -141,7 +147,10 @@
     <DriverSign>
       <FileDigestAlgorithm>sha256</FileDigestAlgorithm>
       <SignMode Condition="'$(EnableTestSign)'=='true'">TestSign</SignMode>
+      <SignMode Condition="'$(EnableProductionSign)'=='true'">ProductionSign</SignMode>
       <TestCertificate Condition="'$(EnableTestSign)'=='true'">$(TestCertSubject)</TestCertificate>
+      <CertificateThumbprint Condition="'$(EnableProductionSign)'=='true'">$(ProductionCertThumbprint)</CertificateThumbprint>
+      <TimestampServer Condition="'$(EnableProductionSign)'=='true'">http://timestamp.digicert.com</TimestampServer>
     </DriverSign>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
