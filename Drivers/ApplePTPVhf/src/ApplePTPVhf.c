@@ -1,14 +1,7 @@
 #include <ntddk.h>
 #include <wdf.h>
 #include <vhf.h>
-#include "..\..\Common\include\ApplePTP_Ioctls.h"
-#ifndef VhfWriteReport
-// Older headers may expose VhfReadReportSubmit; declare a simple fallback to avoid unresolved symbol.
-static NTSTATUS VhfWriteReport(VHFHANDLE Handle, PUCHAR ReportBuffer, ULONG ReportBufferLen) {
-    UNREFERENCED_PARAMETER(Handle); UNREFERENCED_PARAMETER(ReportBuffer); UNREFERENCED_PARAMETER(ReportBufferLen);
-    return STATUS_NOT_SUPPORTED;
-}
-#endif
+#include "..\..\..\Common\include\ApplePTP_Ioctls.h"
 
 DRIVER_INITIALIZE DriverEntry; // Must remain non-static: required export for driver entry point
 static EVT_WDF_DRIVER_DEVICE_ADD EvtDeviceAdd;
@@ -156,6 +149,7 @@ static NTSTATUS EvtDeviceAdd(_In_ WDFDRIVER Driver, _Inout_ PWDFDEVICE_INIT Init
     status = VhfCreate(&vhf, &ctx->VhfHandle);
     if (!NT_SUCCESS(status)) return status;
     status = VhfStart(ctx->VhfHandle);
+    if (!NT_SUCCESS(status)) CleanupVhf(ctx);
     return status;
 }
 
@@ -222,13 +216,11 @@ static VOID EvtIoctl(_In_ WDFQUEUE Q, _In_ WDFREQUEST R, _In_ size_t OutLen, _In
         size_t repLen = 0;
         BuildInputReport(frame, report, sizeof(report), &repLen);
 
-        // Older WDKs may not define VHF_WRITE_REPORT_OPTIONS (introduced in later versions)
-#if defined(VHF_WRITE_REPORT_OPTIONS_VERSION) || defined(VHF_WRITE_REPORT_OPTIONS_INIT)
-        VHF_WRITE_REPORT_OPTIONS opts; VHF_WRITE_REPORT_OPTIONS_INIT(&opts);
-        status = VhfWriteReport(ctx->VhfHandle, report, (ULONG)repLen, &opts);
-#else
-        status = VhfWriteReport(ctx->VhfHandle, report, (ULONG)repLen);
-#endif
+        HID_XFER_PACKET packet = {0};
+        packet.reportBuffer = report;
+        packet.reportBufferLen = (ULONG)repLen;
+        packet.reportId = REPORT_ID_INPUT;
+        status = VhfReadReportSubmit(ctx->VhfHandle, &packet);
     }
 
     WdfRequestComplete(R, status);
